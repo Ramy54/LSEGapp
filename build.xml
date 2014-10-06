@@ -1,0 +1,51 @@
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="PuppetReport" >
+
+	<target name="resolve" description="--> retrieve dependencies with ivy">
+		<ivy:retrieve pattern="lib/[artifact]-[type]-[revision].[ext]" sync="true" />
+	</target>
+
+	<target name="clean">
+		<delete dir="build" failonerror="false" />
+		<delete dir="dist" failonerror="false" />
+	</target>
+
+	<target name="prepare" depends="clean">
+		<mkdir dir="build"/>
+		<mkdir dir="dist"/>
+	</target>
+
+	<path id="build.path">
+		<fileset dir="lib" includes="*.jar"/>
+	</path>
+
+	<target name="build" depends="prepare" description="Builds a jar file for release">
+		<javac 	srcdir="src"
+	         	destdir="build"
+				includeantruntime="false"
+		        debug="on"
+		        source="1.7"
+				classpathref="build.path"
+		  />
+
+		<jar destfile="dist/puppetreports.jar">
+			<fileset dir="src" includes="log4j.xml"/>
+			<fileset dir="build"/>
+			
+			<fileset dir="${basedir}" includes="web/**"/>
+			
+			<!-- The orbit jars are signed by eclipse and their signature screws up our uber-jar. -->
+			<zipgroupfileset dir="lib" includes="*.jar" excludes="javax.servlet.jsp.jstl-orbit-1.2.0.v201105211821.jar"/>
+		  	<zipfileset src="lib/javax.servlet.jsp.jstl-orbit-1.2.0.v201105211821.jar">
+		    	<exclude name="META-INF/ECLIPSE*"/>
+		  	</zipfileset>
+			
+			<manifest>
+				<attribute name="Main-Class"
+		            value="com.ftse.puppet.ServerStarter"/>
+			</manifest>
+		</jar>
+
+	</target>
+
+
+</project>

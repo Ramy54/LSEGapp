@@ -1,0 +1,7 @@
+bin
+derby.log
+lib/*.jar
+report
+reportDb
+reportDb.bak
+testReportDb

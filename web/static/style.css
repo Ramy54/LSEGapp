@@ -1,0 +1,13 @@
+td {font-family: Verdana; font-size: 10pt; color: #003366;}
+p {font-family: Verdana; font-size: 10pt; color: #003366;}
+li {font-family: Verdana; font-size: 10pt; color: #003366;}
+form {max-width: 500px; }
+table {width: 100%; border-collapse: collapse; }
+tr {border: 1px solid black;} 
+th {border: 1px solid black;} 
+td {border: 1px solid black;} 
+tr:nth-child(odd) {background: #e3ebf4}
+tr:nth-child(even) {background: #FFF}
+th {background: #7DAAEA}
+a:link, a:visited, a:active	{font-family: Verdana; color: #003366; text-decoration: none;}
+a:hover {text-decoration: underline}

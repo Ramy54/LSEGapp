@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ivy-module version="2.0">
+    <info organisation="org.apache" module="hello-ivy"/>
+    <dependencies>
+    	<dependency org="org.eclipse.jetty" name="jetty-jsp" rev="9.2.2.v20140723" />
+    	<dependency org="org.eclipse.jetty" name="jetty-servlet" rev="9.2.2.v20140723"/>
+    	<dependency org="org.eclipse.jetty" name="jetty-webapp" rev="9.2.2.v20140723" />
+    	<dependency org="org.eclipse.jetty.toolchain" name="jetty-jsp-jdt" rev="2.3.3" />
+    	<dependency org="org.yaml" name="snakeyaml" rev="1.13"/>
+    	<dependency org="com.fasterxml.jackson.core" name="jackson-databind" rev="2.4.2"/>
+    	<dependency org="org.apache.httpcomponents" name="httpclient" rev="4.3.5"/>
+    	<dependency org="org.apache.derby" name="derby" rev="10.10.2.0"/>
+    	<dependency org="com.j256.ormlite" name="ormlite-jdbc" rev="4.48"/>
+    	
+    	<exclude type="source" ext="jar"/>
+    	<exclude type="src" ext="jar"/>
+    	<exclude type="javadoc" ext="jar"/>
+    	<exclude type="license" ext="txt"/>
+    </dependencies>
+    
+</ivy-module>
