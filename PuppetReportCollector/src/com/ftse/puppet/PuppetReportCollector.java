@@ -118,6 +118,10 @@ public class PuppetReportCollector extends HttpServlet {
 		}
 	}
 
+	/**
+	 * This method converts the generic JsonNode object into a Release domain object.
+	 * It then adds it to the derby database using ORMLite to convert from a POJO into a new database row.
+	 */
 	private Release createRelease(JsonNode facts) throws SQLException{
 		Release release = new Release(facts.get("ftse_current_release").asText());
 		JsonNode branch = facts.get("ftse_release_branch");
@@ -141,8 +145,13 @@ public class PuppetReportCollector extends HttpServlet {
 		return host;
 	}
 
+	/**
+	 * This calls a puppetDB exposed webservice to retrieve facts in JSON format.
+	 * Jackson is used to parse the results into a JsonNode object.  
+	 */
 	private JsonNode getFactsFromPuppetDB(String hostname) throws IOException {
 		CloseableHttpClient httpclient = HttpClients.createDefault();
+		//TODO this is hardcoded! Make as an argument to ServerStarter.
 		HttpGet httpGet = new HttpGet("http://ukubs-q01-pma01:8080/facts/"+hostname);
 		httpGet.addHeader("Accept", "application/json");
 		
@@ -166,6 +175,13 @@ public class PuppetReportCollector extends HttpServlet {
 
 	}
 
+	/**
+	 * This uses SnakeYaml to convert the YAML posted to the server into puppet report objects.
+	 * These are found in the com.ftse.puppet.rubydto package.
+	 * 
+	 * TypeDescriptions are added as a way to convert from a ruby object into a java object.
+	 * 
+	 */
 	private Report getReportFromYaml(Reader reader) throws IOException {
 		Constructor constructor = new Constructor();
 		constructor.addTypeDescription(new TypeDescription(Report.class, "!ruby/object:Puppet::Transaction::Report"));

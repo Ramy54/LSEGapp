@@ -14,10 +14,13 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 
+/**
+ * Used by the JSPs to retrieve data.
+ * @author aimana
+ *
+ */
 public class ReportView {
 
-	
-	
 	private Dao<Host, String> hostDao;
 	private Dao<Release, String> releaseDao;
 

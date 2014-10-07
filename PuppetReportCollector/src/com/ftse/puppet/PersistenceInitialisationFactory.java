@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This is effectively a pool of singleton connections to each database that is used
- * only one when running live, but useful for unit tests.
+ * This is effectively a pool of singleton connections to each database. In practice this is used
+ * only once when running live, but it is useful to have for unit tests.
  * 
  * Would prefer to use Dependency Injection but that seems overkill for this little project.
  * 
