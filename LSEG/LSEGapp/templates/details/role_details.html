@@ -1,0 +1,67 @@
+{% extends "skeleton.html" %}
+
+{% block content %}
+
+    <div class="page-header">
+        <h2><strong>{{ host.name }} - {{ role.name }}</strong></h2>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+
+                    <th class="component_table">Host</th>
+                    <th class="component_table">Role</th>
+                    <th class="component_table">Components</th>
+                    <th class="component_table">Variables</th>
+                    <th class="component_table">Values</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><strong>{{ host }}</strong></td>
+                    <td><strong>{{ role }}</strong></td>
+
+                    {% regroup components_variables by role_component  as role_component_list %} <!-- the list of host_roles is regrouped by host -->
+                    {% for role_component in role_component_list %}
+                        <td>
+                            <a  href="{% url "LSEGapp.views.component_details" host.id role.id role_component.grouper.component.id  %}"><strong>{{ role_component.grouper.component }}</strong></a>
+                            <button type="button" class="btn btn-xs btn-info" onclick="location.href='{% url "LSEGapp.views.edit_component" host.id role.id role_component.grouper.component.id  %}';">
+                                <span   class="glyphicon glyphicon-edit"></span>
+                            </button>
+                            <button type="button" id="submit" class="btn btn-xs btn-danger" onclick="location.href='{% url "LSEGapp.views.delete_component" host.id role.id role_component.grouper.component.id  %}';"  >
+                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                            </button>
+                        </td>
+
+                        {% for component_variable in role_component.list %}
+
+                            <td>{{ component_variable.variable }}</td>
+                            <td>{{ component_variable.variable.default_value }}</td>
+                            </tr>
+                            <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        {% endfor %}
+                    <td></td>
+                    <td></td>
+                    </tr>
+                        <tr>
+                        <td></td>
+                        <td></td>
+
+                    {% endfor %}
+                    <td></td> <td></td> <td></td> <!-- FOR LAYOUT PURSPOSES -->
+                    </tr>
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+{% endblock %}

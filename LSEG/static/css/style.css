@@ -1,0 +1,30 @@
+
+h1{
+    color: darkgoldenrod
+}
+
+h2{
+    color: darkgoldenrod;
+}
+
+#home {
+    color: aquamarine
+}
+
+#FTSE {
+    color: red
+}
+
+#head-css {
+    color: red;
+    text-align: center;
+}
+
+#col-md-10 {
+    margin:0
+}
+
+#table-striped {
+    color: red;
+    width: auto;
+}

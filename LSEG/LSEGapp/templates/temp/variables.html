@@ -1,0 +1,86 @@
+{% extends "skeleton.html" %}
+{% load static %}
+
+{% block nav %}
+    <li><a href="{% url "LSEGapp.views.index"%}">Home</a></li>
+    <li><a href="{% url "LSEGapp.views.role_template" %}">Roles</a></li>
+    <li><a href="{% url "LSEGapp.views.component_template" %}">Components</a></li>
+    <li class="active"><a href="{% url "LSEGapp.views.variables"%}">Variables</a></li>
+{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h2>Add a variable</h2>
+    </div>
+
+    <form action="{% url "LSEGapp.views.variables" %}" method="post">
+        {% csrf_token %}
+        <table class="table table-striped" style="margin-bottom: 5px">
+            <thead>
+                <th>{{ form.name.label }}</th>
+                <th>{{ form.type.label }}</th>
+                <th>{{ form.default_value.label }}</th>
+                <th>{{ form.required.label }}</th>
+                <th>{{ form.description.label }}</th>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{ form.name }}</td>
+                <td>{{ form.type }}</td>
+                <td>{{ form.default_value }}</td>
+                <td>{{ form.required }}</td>
+                <td>{{ form.description }}</td>
+            </tr>
+
+            </tbody>
+        </table>
+        <input type="submit" class="btn btn-s btn-success" value="Add variable" style="float: right"/>
+    </form>
+
+
+    <div class="page-header" style="margin-top: 75px">
+        <h3>Existing Variables</h3>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+
+            <table class="table table-striped";>
+                <thead>
+                <tr>
+                    <th class="col-md-2">Name</th>
+                    <th class="col-md-1">Type</th>
+                    <th class="col-md-1">Default Value </th>
+                    <th class="col-md-1">Required</th>
+                    <th class="col-md-4">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for variable in variables %}
+                    <tr>
+                        <td>
+                            <strong>{{ variable.name }}</strong>
+                             <button type="button" class="btn btn-xs btn-info" onclick="location.href='{% url "LSEGapp.views.edit_variable" variable.id  %}';">
+                                <span   class="glyphicon glyphicon-edit"></span>
+                            </button>
+                            <button type="button" id="submit" class="btn btn-xs btn-danger" onclick="location.href='{% url "LSEGapp.views.delete_variable" variable.id %}'" type="button" >
+                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                            </button>
+                        </td>
+
+                        <td>{{ variable.type }}</td>
+                        <td>{{ variable.default_value }}</td>
+                        <td>{{ variable.required }}</td>
+                        <td>{{ variable.description }}</td>
+
+
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+
+
+{% endblock %}

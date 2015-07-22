@@ -1,0 +1,63 @@
+{% extends "skeleton.html" %}
+
+{% block content %}
+
+    <div class="page-header">
+        <h2><strong> {{ host.name }} - {{ role.name }} - {{ component.name }} </strong></h2>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+
+                    <th class="component_table">Host</th>
+                    <th class="component_table">Role</th>
+                    <th class="component_table">Component</th>
+                    <th class="component_table">Variables</th>
+                    <th class="component_table">Values</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><strong>{{ host }}</strong></td>
+                    <td><strong>{{ role }}</strong></td>
+                    <td><strong>{{ component }}</strong></td>
+
+                    {% for component_variables in components_variables %}
+                        <td> {{ component_variables.variable.name }} </td>
+                        <td>
+                            <script>
+                                function myFunction() {
+                                    var value = "{{ component_variables.variable.default_value }}"
+                                    var new_value = prompt('Enter value',value)
+                                    var url = '{% url "LSEGapp.views.host_details" 135 %}'
+                                    url.replace('135','137')
+                                    location.href= url
+                                }
+
+                            </script>
+                        {{ component_variables.variable.default_value }}
+                        <button type="button" class="btn btn-xs btn-info" onclick="myFunction()">
+                            <span   class="glyphicon glyphicon-edit"></span>
+                        </button>
+
+                    </td>
+                        </tr>
+                        <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    {% endfor %}
+                    <td></td>
+                    <td></td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+{% endblock %}

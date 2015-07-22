@@ -1,0 +1,57 @@
+{% extends "skeleton.html" %}
+
+
+{% block content %}
+
+    <div class="page-header">
+        <h2><strong>{{ host.name }}</strong></h2>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Host </th>
+                    <th>Role<button type="button" class="btn btn-xs btn-success">Add</button></th>
+                    <th>Components</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <td> <strong>{{ host }}</strong></td>
+                {% regroup role_components by host_role as host_role_list %} <!-- the list of host_roles is regrouped by host -->
+                {% for host_role in host_role_list %}
+
+                    <td>
+                        <strong><a  href="{% url "LSEGapp.views.role_details" host_role.grouper.host.id host_role.grouper.role.id %}">{{ host_role.grouper.role.name }}</a></strong>
+                        <button type="button" class="btn btn-xs btn-info" onclick="location.href='{% url "LSEGapp.views.edit_role" host.id host_role.grouper.role.id  %}';">
+                            <span   class="glyphicon glyphicon-edit"></span>
+                        </button>
+
+                        <button type="button" id="submit" class="btn btn-xs btn-danger" onclick="location.href='{% url "LSEGapp.views.delete_role" host.id host_role.grouper.id %}'">
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        </button>
+                    </td>
+                    {% for role_component in host_role.list %}
+                        <td>
+                            <a  href="{% url "LSEGapp.views.component_details" host.id role_component.host_role.role.id role_component.component.id  %}"> {{ role_component.component.name }} </a>
+                        </td>
+                        </tr>
+                        <tr>
+                        <td></td>
+                        <td></td>
+                    {% endfor %}
+
+                <td></td>
+                </tr>
+                    <td></td>
+                {% endfor %}
+                <td></td>
+                <td></td>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+{% endblock %}

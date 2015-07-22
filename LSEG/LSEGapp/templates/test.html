@@ -1,0 +1,33 @@
+{% extends 'skeleton.html' %}
+{% load static %}
+
+
+
+{% block content %}
+
+
+    <form id="myForm" method="post" action="">
+        {{ form.as_p }}
+        <table border="0" cellpadding="0" cellspacing="0">
+            <tbody>
+            {% for form in sorteForm %}
+                <tr>
+                    <td>{{ form.field1 }}</td>
+                    <td>{{ form.field2 }}</td>
+                    <td>{{ form.field3 }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {{ sorteForm.management_form }}
+    </form>
+
+<script type="text/javascript">
+    $(function() {
+        $('#myForm tbody tr').formset();
+    })
+</script>
+
+
+{% endblock %}
+
