@@ -1,8 +1,8 @@
 from datetime import datetime
 from django.http import *
 from django.shortcuts import *
-from LSEGapp.forms import *
-from LSEGapp.models import *
+from LSEG.LSEGapp.forms import *
+from LSEG.LSEGapp.models import *
 from django.forms.formsets import *
 
 
@@ -26,6 +26,7 @@ def index(request):
     host_roles =[]
     for host in hosts:
         host_roles = host_roles + list(HostRole.objects.filter(host=host))
+
 
     return render(request, 'index.html', locals())
 
@@ -374,6 +375,8 @@ def host_details(request,id_host):
 
     for host_role in host_roles:
         role_components = role_components + list(RoleComponents.objects.filter(host_role=host_role))
+
+
 
     return render(request, 'details/host_details.html',locals())
 
