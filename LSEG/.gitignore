@@ -1,2 +1,4 @@
 ramy_test.txt
-../.idea/
+.*idea
+*.pyc
+
