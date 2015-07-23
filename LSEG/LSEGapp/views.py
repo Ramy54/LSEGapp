@@ -109,7 +109,7 @@ def add_host(request,id_env):
     RoleFormset = formset_factory(AddRoleForm)
     environment = Environment.objects.get(id=id_env)
     if request.method == 'POST':
-        form2 = HostForm( request.POST, auto_id=True )
+        form2 = HostForm(request.POST, auto_id=True )
         formset = RoleFormset(request.POST)
 
         if form2.is_valid():
