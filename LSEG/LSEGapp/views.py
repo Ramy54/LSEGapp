@@ -1,6 +1,6 @@
 from django.http import *
 from django.shortcuts import *
-from LSEGapp import forms
+from LSEGapp.forms import *
 from LSEGapp.models import *
 from django.forms.formsets import *
 
