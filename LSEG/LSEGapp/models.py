@@ -148,7 +148,7 @@ class RoleComponents(models.Model):
 class ComponentVariables(models.Model):
     role_component = models.ForeignKey(RoleComponents)
     variable = models.ForeignKey(Variable)
-    #value = models.CharField(max_length=50,default="")
+    value = models.CharField(max_length=50, default="")
 
     class Meta:
         verbose_name = '12- Component Variables'
