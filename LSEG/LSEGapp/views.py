@@ -1,8 +1,8 @@
 from datetime import datetime
 from django.http import *
 from django.shortcuts import *
-from LSEG.LSEGapp.forms import *
-from LSEG.LSEGapp.models import *
+from LSEGapp.forms import *
+from LSEGapp.models import *
 from django.forms.formsets import *
 
 
