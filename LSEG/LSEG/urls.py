@@ -15,8 +15,9 @@ Including another URLconf
 """
 from django.conf.urls import include, url,patterns
 from django.contrib import admin
+
 from LSEGapp.forms import *
-from LSEGapp import views
+
 urlpatterns = patterns('LSEGapp.views',
 
                        # MAIN URLS
@@ -58,12 +59,11 @@ urlpatterns = patterns('LSEGapp.views',
                        url(r'^role_template_delete/(?P<id>\d+)$', 'delete_role_template'),
                        url(r'^component_template_delete/(?P<id>\d+)$', 'delete_component_template'),
                        url(r'^variables/(?P<id>\d+)$','delete_variable'),
-
                        url(r'^role_delete/(?P<id_host>\d+)/(?P<id_host_role>\d+)$', 'delete_role'),
                        url(r'^component_delete/(?P<id_host>\d+)/(?P<id_role>\d+)/(?P<id_component>\d+)$', 'delete_component'),
 
-
-
+                       #SAVE YAML FILE
+                       url(r'save_file/(?P<id_host>\d+)$','save_file')
 
 
 

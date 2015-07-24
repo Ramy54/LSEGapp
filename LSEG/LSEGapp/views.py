@@ -1,4 +1,5 @@
 from django.http import *
+import csv
 from django.shortcuts import *
 from LSEGapp.forms import *
 from LSEGapp.models import *
@@ -25,7 +26,6 @@ def index(request):
     host_roles =[]
     for host in hosts:
         host_roles = host_roles + list(HostRole.objects.filter(host=host))
-
 
     return render(request, 'index.html', locals())
 
@@ -407,4 +407,21 @@ def display_data(request, data, **kwargs):
     return render_to_response('posted-data.html', dict(data=data, **kwargs),
                               context_instance=RequestContext(request))
 
+
+
+def save_file(request,id_host):
+    host = Host.objects.get(id=id_host)
+    host_roles = HostRole.objects.all().filter(host=host)
+    roles_components = RoleComponents.objects.all().filter(host_role = host_roles)
+    components_variables = ComponentVariables.objects.all().filter(role_component = roles_components)
+    response = HttpResponse(content_type='text/csv')
+
+    response['Content-Disposition'] = "attachment; filename=" + host.name + ".yaml"
+
+    writer = csv.writer(response, delimiter=':')
+    for component_variable in components_variables:
+        variable = component_variable.role_component.component.name + '-' + component_variable.variable.name
+        writer.writerow([variable, component_variable.variable.default_value])
+
+    return response
 
