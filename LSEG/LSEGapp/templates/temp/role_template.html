@@ -87,16 +87,16 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th class="component_table">Role</th>
-                    <th class="component_table">Components</th>
+                    <th class="col-md-3">Role</th>
+                    <th class="col-md-3">Components</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% regroup roles_components by role as role_list %} <!-- the list of host_roles is regrouped by host -->
                 {% for role in role_list %}
                     <tr>
-                        <td>
-                            <strong>{{ role.grouper }}</strong>
+                        <td align="right">
+                            <span style="float: left;;"><strong>{{ role.grouper }}</strong></span>
                             <button type="button" class="btn btn-xs btn-info" onclick="location.href='{% url "LSEGapp.views.edit_role_template" role.grouper.id  %}';">
                                 <span   class="glyphicon glyphicon-edit"></span>
                             </button>

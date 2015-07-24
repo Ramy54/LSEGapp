@@ -34,7 +34,7 @@
                     </td>
                     {% for role_component in host_role.list %}
                         <td>
-                            <a  href="{% url "LSEGapp.views.component_details" host.id role_component.host_role.role.id role_component.component.id  %}"> {{ role_component.component.name }} </a>
+                            {{ role_component.component.name }}
                         </td>
                         </tr>
                         <tr>
