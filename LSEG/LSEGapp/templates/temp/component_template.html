@@ -80,24 +80,24 @@
 
 
     <div class="page-header">
-        <h2>Existing Components</h2>
+        <h3>Existing Components</h3>
     </div>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-8">
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th class="component_table">Component</th>
-                    <th class="component_table">Variables</th>
-                    <th class="component_table">Default_Values</th>
+                    <th class="col-md-3">Component</th>
+                    <th class="col-md-3">Variables</th>
+                    <th class="col-md-3">Default_Values</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% regroup components_variables by component as component_list %} <!-- the list of host_roles is regrouped by host -->
                 {% for component in component_list %}
                     <tr>
-                        <td>
-                            <strong>{{ component.grouper }}</strong>
+                        <td align="right">
+                            <span style="float: left"><strong>{{ component.grouper }}</strong></span>
                             <button type="button" class="btn btn-xs btn-info" onclick="location.href='{% url "LSEGapp.views.edit_component_template" component.grouper.id  %}';">
                                 <span   class="glyphicon glyphicon-edit"></span>
                             </button>

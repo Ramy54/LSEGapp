@@ -53,11 +53,17 @@
 
 {% block content %}
     <div class="page-header">
-        <h2>Edit {{ role }}</h2>
+        <h2>Edit role : <strong>{{ role }}</strong> </h2>
     </div>
 
-<form id="myForm" method="post" action="">
+    <form id="myForm" method="post" action="">
         {% csrf_token %}
+        <table >
+            <tr>
+                <th>{{ form2.name.label }} </th>
+                <td>{{ form2.name }}</td>
+            </tr>
+        </table>
 
         <table id="id_contact_info_table"  border="0" cellpadding="0" cellspacing="5">
             <tr > <th scope="col" style="margin: 50px  5px 5px 10px;">Variable</th>
@@ -71,7 +77,7 @@
         </table>
         <p>
             {{ formset.management_form }}
-             <input type="submit" class="btn btn-s btn-info" value="Edit component" style=""/>
+            <input type="submit" class="btn btn-s btn-success" value="Save components" style=""/>
         </p>
     </form>
 

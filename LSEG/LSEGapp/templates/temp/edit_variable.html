@@ -10,7 +10,7 @@
 
 {% block content %}
     <div class="page-header">
-        <h2>Edit {{ var }}</h2>
+        <h2>Edit variable <strong>{{ var }}</strong></h2>
     </div>
 
     <form action="" method="post">
@@ -35,7 +35,7 @@
             </tbody>
         </table>
 
-        <input type="submit" class="btn btn-s btn-info" value="Edit variable" style="float: right"/>
+        <input type="submit" class="btn btn-s btn-success" value="Save variable" style="float: right"/>
     </form>
 
 {% endblock %}

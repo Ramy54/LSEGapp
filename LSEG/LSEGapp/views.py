@@ -351,8 +351,13 @@ def delete_variable(request,id):
     return redirect(variables)
 
 def delete_role(request,id_host,id_host_role):
+    host = Host.objects.get(id=id_host)
+    host_roles = HostRole.objects.all().filter(host=host)
     host_role = HostRole.objects.get(id=id_host_role)
     host_role.delete()
+    if len(host_roles)==0:
+        host.delete()
+
     return redirect(host_details,id_host=id_host)
 
 def delete_component(request,id_host,id_role,id_component):
@@ -360,8 +365,12 @@ def delete_component(request,id_host,id_role,id_component):
     role = Role.objects.get(id=id_role)
     host_role = HostRole.objects.get(host=host,role=role)
     component = Component.objects.get(id=id_component)
+    role_components = RoleComponents.objects.filter(host_role=host_role)
     role_component = RoleComponents.objects.get(host_role=host_role, component=component)
     role_component.delete()
+    if len(role_components)==0:
+        host_role.delete()
+
     return redirect(role_details,id_host=id_host,id_role=id_role)
 
 
@@ -420,7 +429,7 @@ def save_file(request,id_host):
 
     writer = csv.writer(response, delimiter=':')
     for component_variable in components_variables:
-        variable = component_variable.role_component.component.name + '-' + component_variable.variable.name
+        variable = component_variable.variable.name
         writer.writerow([variable, component_variable.variable.default_value])
 
     return response

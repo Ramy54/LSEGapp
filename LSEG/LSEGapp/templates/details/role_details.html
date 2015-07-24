@@ -7,16 +7,16 @@
     </div>
 
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-10">
             <table class="table table-striped">
                 <thead>
                 <tr>
 
-                    <th class="component_table">Host</th>
-                    <th class="component_table">Role</th>
-                    <th class="component_table">Components</th>
-                    <th class="component_table">Variables</th>
-                    <th class="component_table">Values</th>
+                    <th class="col-md-2">Host</th>
+                    <th class="col-md-2">Role</th>
+                    <th class="col-md-3">Components <button type="button" class="btn btn-xs btn-success">Add</button></th></th>
+                    <th class="col-md-3">Variables</th>
+                    <th class="col-md-3">Values</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -39,7 +39,17 @@
                         {% for component_variable in role_component.list %}
 
                             <td>{{ component_variable.variable }}</td>
-                            <td>{{ component_variable.variable.default_value }}</td>
+
+
+                            <td><a onclick="myFunction()">{{ component_variable.variable.default_value }}</a></td>
+                            <script>
+                                function myFunction() {
+                                    var value = "default";
+                                    var new_value = prompt('Enter value',value);
+                                    var url = '';
+                                    location.href= url;
+                                }
+                            </script>
                             </tr>
                             <tr>
                             <td></td>

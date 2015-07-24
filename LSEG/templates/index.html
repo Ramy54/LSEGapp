@@ -3,10 +3,11 @@
 
 {% block content %}
 
-    <div>
+    <div style="margin-top: 20px">
         <form action="{% url 'LSEGapp.views.index' %}" method="post">
             {% csrf_token %}
-            {{ form.as_p }}
+            <h4>{{ form.environment.label }} :  {{ form.environment }}</h4>
+
         </form>
     </div>
 

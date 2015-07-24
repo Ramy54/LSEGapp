@@ -53,7 +53,7 @@
 
 {% block content %}
     <div class="page-header">
-        <h2>Edit {{ component }}</h2>
+        <h2>Edit component : <strong>{{ component }}</strong></h2>
     </div>
 
 <form id="myForm" method="post" action="">
@@ -78,7 +78,7 @@
         </table>
         <p>
             {{ formset.management_form }}
-             <input type="submit" class="btn btn-s btn-info" value="Edit component" style=""/>
+             <input type="submit" class="btn btn-s btn-success" value="Save component" />
         </p>
     </form>
 
