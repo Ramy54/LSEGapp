@@ -45,6 +45,15 @@ class AddVariableForm(forms.Form):
     variable = forms.ModelChoiceField(queryset=Variable.objects.all(), label="Variable")
 
 class AddRoleForm(forms.Form):
-    role = forms.ModelChoiceField(queryset=Role.objects.all(), label="Role")
+    role = forms.ModelChoiceField(queryset=Role.objects.none(), label="Role")
+
+
+
+class RoleForm2(forms.Form):
+    role = forms.ModelChoiceField(queryset=Role.objects.all())
+    def __init__(self, *args, **kwargs):
+        super(RoleForm2, self).__init__(*args, **kwargs)
+        self.fields['role'] = forms.ModelChoiceField("life is good")
+
 
 

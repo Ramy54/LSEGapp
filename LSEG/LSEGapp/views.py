@@ -1,9 +1,11 @@
 from django.http import *
 import csv
+import json
 from django.shortcuts import *
 from LSEGapp.forms import *
 from LSEGapp.models import *
 from django.forms.formsets import *
+
 
 
 # MAIN PAGES VIEWS
@@ -106,31 +108,32 @@ def variables(request):
 
 # ADD VIEWS
 def add_host(request,id_env):
-    RoleFormset = formset_factory(AddRoleForm)
     environment = Environment.objects.get(id=id_env)
+
+    RoleFormset = formset_factory(AddRoleForm)
+
     if request.method == 'POST':
         form2 = HostForm(request.POST, auto_id=True )
         formset = RoleFormset(request.POST)
 
-        if form2.is_valid():
+        if form2.is_valid() and formset.is_valid():
 
-            if formset.is_valid():
-                name = form2.cleaned_data['name']    #Get name from the form
-                business_application = form2.cleaned_data['business_application']
-                host = Host(name=name, environment=environment)
-                host.save()                         #Add a host
-                host_business_application = HostBusinessApplication(business_application=business_application,host=host)
-                host_business_application.save()    #Add a host_business_app
+            name = form2.cleaned_data['name']    #Get name from the form
+            business_application = form2.cleaned_data['business_application']
+            host = Host(name=name, environment=environment)
+            host.save()                         #Add a host
+            host_business_application = HostBusinessApplication(business_application=business_application,host=host)
+            host_business_application.save()    #Add a host_business_app
 
-                roles_id = []
+            roles_id = []
 
-                for form in formset:
-                    role = form.cleaned_data['role']
-                    id = [role.id]
-                    roles_id = roles_id + id
+            for form in formset:
+                role = form.cleaned_data['role']
+                id = [role.id]
+                roles_id = roles_id + id
 
-                save_roles(host,roles_id)
-                return redirect(index)
+            save_roles(host,roles_id)
+            return redirect(index)
 
     else:
         form2 = HostForm()
@@ -433,4 +436,12 @@ def save_file(request,id_host):
         writer.writerow([variable, component_variable.variable.default_value])
 
     return response
+
+def get_roles(request, business_app_id):
+    business_app = BusinessApplication.get(id=business_app_id)
+    roles = RoleBusinessApplication.objects.filter(business_application=business_app)
+    roles_dict = {}
+    for role in roles:
+        roles_dict[role.role.id] = role.role.name
+    return HttpResponse(json.dumps(roles_dict), mimetype="application/json")
 

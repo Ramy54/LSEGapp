@@ -63,6 +63,18 @@ class Role(models.Model):
     def __str__(self):
         return self.name
 
+# RoleBusinessApplication Class
+class RoleBusinessApplication(models.Model):
+    role = models.ForeignKey(Role)
+    business_application = models.ForeignKey(BusinessApplication)
+
+    class Meta:
+        verbose_name = '04- Role Business Application'
+        verbose_name_plural = '04 - Role Business Applications'
+
+    def __str__(self):
+        return self.role.name + '-' + self.business_application.name
+
 
 # Component Class
 class Component(models.Model):
@@ -83,6 +95,7 @@ class Variable(models.Model):
     type = models.CharField(max_length=50)
     required = models.BooleanField()
     description = models.TextField(blank=True)
+    editable = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = '07- Variable'
