@@ -390,10 +390,16 @@ def host_details_2(request,id_host):
     roles_components = RoleComponents.objects.filter(host_role=host_roles)
     object_list = []
 
+    role_component_old = roles_components.last()
+
     for role_components in roles_components:
         variable_list = ComponentVariables.objects.filter(role_component=role_components)
+        if role_components.host_role.role.name == role_component_old.host_role.role.name:
+            role_components.host_role.role.name = ""
+
         object = [ComponentVariableList(role_component=role_components,variable_list=variable_list)]
         object_list = object_list + object
+        role_component_old = role_components
 
     return render(request,'details/host_details2.html',locals())
 

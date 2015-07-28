@@ -28,7 +28,7 @@
                 {% for group in host_grouped %}
                     <tr>
                         <td>
-                            <strong><a href="{% url "LSEGapp.views.host_details" group.grouper.id %}">{{ group.grouper }}</a></strong>
+                            <strong><a href="{% url "LSEGapp.views.host_details_2" group.grouper.id %}">{{ group.grouper }}</a></strong>
 
 
                             <button type="button" class="btn btn-xs btn-info" onclick="location.href='{% url "LSEGapp.views.edit_host" group.grouper.id  %}';">

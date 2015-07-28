@@ -12,7 +12,7 @@
                 <thead>
                 <tr>
                     <th class="col-md-2">Host </th>
-                    <th class="col-md-2">Role<button type="button" class="btn btn-xs btn-success">Add</button></th>
+                    <th class="col-md-2">Role</th>
                     <th class="col-md-3">Components</th>
                     <th class="col-md-3">Variables</th>
                     <th class="col-md-3">Values</th>
@@ -23,8 +23,9 @@
                 <td> <strong>{{ host }}</strong></td>
 
                 {% for object in object_list %}
-                    <td> {{ object.role_component.host_role.role }} </td>
-                    <td> {{ object.role_component.component }} </td>
+                    <td><strong><a  href="{% url "LSEGapp.views.role_details" host.id object.role_component.host_role.role.id %}">{{ object.role_component.host_role.role }}</a></strong>  </td>
+
+                    <td> <i>{{ object.role_component.component }}</i> </td>
 
                     {% for component_variable in object.variable_list %}
                         <td> {{ component_variable.variable }} </td>
