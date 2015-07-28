@@ -4,7 +4,7 @@ from django.shortcuts import *
 from LSEGapp.forms import *
 from LSEGapp.models import *
 from django.forms.formsets import *
-
+from django.core.files import File
 
 # MAIN PAGES VIEWS
 def bootstrap(request):
@@ -423,14 +423,13 @@ def save_file(request,id_host):
     host_roles = HostRole.objects.all().filter(host=host)
     roles_components = RoleComponents.objects.all().filter(host_role = host_roles)
     components_variables = ComponentVariables.objects.all().filter(role_component = roles_components)
-    response = HttpResponse(content_type='text/csv')
+    response = HttpResponse(content_type='text/txt')
 
     response['Content-Disposition'] = "attachment; filename=" + host.name + ".yaml"
 
-    writer = csv.writer(response, delimiter=':')
+
     for component_variable in components_variables:
         variable = component_variable.variable.name
-        writer.writerow([variable, component_variable.variable.default_value])
+        response.write(variable + ": " + component_variable.variable.default_value + "\n")
 
     return response
-
