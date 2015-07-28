@@ -35,7 +35,6 @@ class VariableForm(forms.ModelForm):
             }
 
 
-
 #FORM USED IN FORMSETS
 
 class AddComponentForm(forms.Form):

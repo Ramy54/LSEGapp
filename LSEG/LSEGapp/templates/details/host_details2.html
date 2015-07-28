@@ -1,0 +1,55 @@
+{% extends "skeleton.html" %}
+
+
+{% block content %}
+
+    <div class="page-header">
+        <h2><strong>{{ host.name }}</strong></h2>
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th class="col-md-2">Host </th>
+                    <th class="col-md-2">Role<button type="button" class="btn btn-xs btn-success">Add</button></th>
+                    <th class="col-md-3">Components</th>
+                    <th class="col-md-3">Variables</th>
+                    <th class="col-md-3">Values</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <td> <strong>{{ host }}</strong></td>
+
+                {% for object in object_list %}
+                    <td> {{ object.role_component.host_role.role }} </td>
+                    <td> {{ object.role_component.component }} </td>
+
+                    {% for component_variable in object.variable_list %}
+                        <td> {{ component_variable.variable }} </td>
+                        <td> {{ component_variable.variable.default_value }}</td>
+                        </tr>
+                        <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    {% endfor %}
+                    <td></td>
+                    <td></td>
+                    <tr></tr>
+                    <td></td>
+
+                {% endfor   %}
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+{% endblock %}

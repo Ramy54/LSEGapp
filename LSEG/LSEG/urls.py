@@ -36,6 +36,7 @@ urlpatterns = patterns('LSEGapp.views',
 
                        #DETAILS URLS
                        url(r'host_details/(?P<id_host>\d+)$','host_details'),
+                       url(r'host_details_2/(?P<id_host>\d+)$','host_details_2'),
                        url(r'role_details/(?P<id_host>\d+)/(?P<id_role>\d+)$','role_details'),
                        url(r'component_details/(?P<id_host>\d+)/(?P<id_role>\d+)/(?P<id_component>\d+)$','component_details'),
 

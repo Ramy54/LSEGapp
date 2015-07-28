@@ -156,3 +156,8 @@ class ComponentVariables(models.Model):
 
     def __str__(self):
         return self.role_component.component.name + '-' + self.variable.name
+
+class ComponentVariableList:
+    def __init__(self,role_component,variable_list):
+        self.role_component = role_component
+        self.variable_list = variable_list

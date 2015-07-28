@@ -379,24 +379,31 @@ def delete_component(request,id_host,id_role,id_component):
 def host_details(request,id_host):
     host = Host.objects.get(id=id_host)
     host_roles = HostRole.objects.filter(host=host)
-    role_components = []
-
-    for host_role in host_roles:
-        role_components = role_components + list(RoleComponents.objects.filter(host_role=host_role))
-
-
+    role_components = RoleComponents.objects.filter(host_role=host_roles)
 
     return render(request, 'details/host_details.html',locals())
+
+
+def host_details_2(request,id_host):
+    host = Host.objects.get(id=id_host)
+    host_roles = HostRole.objects.filter(host=host)
+    roles_components = RoleComponents.objects.filter(host_role=host_roles)
+    object_list = []
+
+    for role_components in roles_components:
+        variable_list = ComponentVariables.objects.filter(role_component=role_components)
+        object = [ComponentVariableList(role_component=role_components,variable_list=variable_list)]
+        object_list = object_list + object
+
+    return render(request,'details/host_details2.html',locals())
+
 
 def role_details(request,id_host,id_role):
     host = Host.objects.get(id=id_host)
     role = Role.objects.get(id=id_role)
     host_role = HostRole.objects.get(host=host,role=role)
     role_components = RoleComponents.objects.filter(host_role=host_role)
-
-    components_variables = []
-    for role_component in role_components:
-        components_variables = components_variables + list(ComponentVariables.objects.filter(role_component=role_component))
+    components_variables = ComponentVariables.objects.filter(role_component=role_components)
 
     return render(request, 'details/role_details.html',locals())
 
