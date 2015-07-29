@@ -8,6 +8,10 @@
     <li class="active"><a href="{% url "LSEGapp.views.variables"%}">Variables</a></li>
 {% endblock %}
 
+{% block extrahead %}
+    <script type="text/javascript" src={% static 'js/my_js.js' %}> </script>
+{% endblock %}
+
 {% block content %}
     <div class="page-header">
         <h2>Add a variable</h2>
@@ -62,13 +66,13 @@
                              <button type="button" class="btn btn-xs btn-info" onclick="location.href='{% url "LSEGapp.views.edit_variable" variable.id  %}';" style="alignment: right">
                                 <span   class="glyphicon glyphicon-edit"></span>
                             </button>
-                            <button type="button" id="submit" class="btn btn-xs btn-danger" onclick="location.href='{% url "LSEGapp.views.delete_variable" variable.id %}'" type="button" style="alignment: right" >
+                            <button type="button" id="submit" class="btn btn-xs btn-danger" onclick="location.href='{% url "LSEGapp.views.delete_variable" variable.id %}'" style="alignment: right" >
                                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                             </button>
                         </td>
 
                         <td>{{ variable.type }}</td>
-                        <td>{{ variable.default_value }}</td>
+                        <td > <a class="variable_template" id={{ variable.id }}>{{ variable.default_value }}</a></td>
                         <td>{{ variable.required }}</td>
                         <td>{{ variable.description }}</td>
 

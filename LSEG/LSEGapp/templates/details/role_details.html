@@ -1,4 +1,9 @@
 {% extends "skeleton.html" %}
+{% load static %}
+
+{% block extrahead %}
+    <script type="text/javascript" src={% static 'js/my_js.js' %}> </script>
+{% endblock %}
 
 {% block content %}
 
@@ -9,9 +14,9 @@
     <div class="row">
         <div class="col-md-10">
             <table class="table table-striped">
+
                 <thead>
                 <tr>
-
                     <th class="col-md-2">Host</th>
                     <th class="col-md-2">Role</th>
                     <th class="col-md-3">Components <button type="button" class="btn btn-xs btn-success">Add</button></th></th>
@@ -19,8 +24,9 @@
                     <th class="col-md-3">Values</th>
                 </tr>
                 </thead>
+
                 <tbody>
-                <tr>
+                    <tr>
                     <td><strong>{{ host }}</strong></td>
                     <td><strong>{{ role }}</strong></td>
 
@@ -39,23 +45,7 @@
                         {% for component_variable in role_component.list %}
 
                             <td>{{ component_variable.variable }}</td>
-
-
-                            <td><a onclick="myFunction()">{{ component_variable.variable.default_value }}</a></td>
-                            <script>
-                                function myFunction() {
-                                    var value = "default";
-                                    var new_value = prompt('Enter value',value);
-                                    var url = '';
-                                    location.href= url;
-                                }
-<<<<<<< HEAD
-
-
-
-=======
->>>>>>> 02c64c73f830ac2dcf0a8f7a84ccfd0b5b755dd5
-                            </script>
+                            <td><a class="variable" id={{ component_variable.id }}>{{ component_variable.variable.default_value }}</a></td>
                             </tr>
                             <tr>
                             <td></td>

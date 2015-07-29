@@ -22,4 +22,24 @@ $(function(){
 
         })
     })
+
+    $(".variable_template").click(function(){
+        var var_id = this.id;
+        var old_value = $(".variable_template[id='" + var_id + "']").text();
+        var new_value = prompt("Enter value",old_value);
+
+        $.ajax({
+            url: "/edit_default_value",
+            type: "POST",
+            data: {
+                new_value: new_value,
+                var_id: var_id
+            },
+            success: function () {
+                $(".variable_template[id='" + var_id + "']").text(new_value);
+            }
+
+        })
+    })
+
 })

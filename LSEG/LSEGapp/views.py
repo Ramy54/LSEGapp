@@ -57,7 +57,7 @@ def role_template(request):
     else:
         form2 = RoleForm()
         formset = ComponentFormset()
-    return render(request, 'temp/role_template.html',locals())
+    return render(request, 'template/role_template.html',locals())
 
 def component_template(request):
     VariableFormset = formsets.formset_factory(AddVariableForm)
@@ -81,7 +81,7 @@ def component_template(request):
         form2 = ComponentForm()
         formset = VariableFormset()
 
-    return render(request, 'temp/component_template.html',locals())
+    return render(request, 'template/component_template.html',locals())
 
 def variables(request):
     variables = Variable.objects.all()  #The variables to be given to the template
@@ -100,7 +100,7 @@ def variables(request):
     else:
         form = VariableForm()
 
-    return render(request, 'temp/variables.html', locals())
+    return render(request, 'template/variables.html', locals())
 
 
 
@@ -253,7 +253,7 @@ def edit_role_template(request, id_role):
         formset = ComponentFormset(initial=list_of_components)
         form2 = RoleForm(initial={'name':role.name})
 
-    return render(request, 'temp/edit_role_template.html',locals())
+    return render(request, 'template/edit_role_template.html',locals())
 
 def edit_component(request,id_host,id_role,id_component):
     host = Host.objects.get(id=id_host)
@@ -306,7 +306,7 @@ def edit_component_template(request,id_component):
         formset = VariableFormset(initial=list_of_variables)
         form2 = ComponentForm(initial={'name': component.name})
 
-    return render(request, 'temp/edit_component_template.html',locals())
+    return render(request, 'template/edit_component_template.html',locals())
 
 def edit_variable(request,id_var):
     var = Variable.objects.get(id=id_var)
@@ -317,8 +317,19 @@ def edit_variable(request,id_var):
     else:
         form= VariableForm(instance=var)
 
-    return render(request, 'temp/edit_variable.html',locals())
+    return render(request, 'template/edit_variable.html',locals())
 
+
+def edit_default_value(request):
+    if request.is_ajax():
+        new_value = request.POST['new_value']
+        variable_id = request.POST['var_id']
+        variable = Variable.objects.get(id=variable_id)
+        variable.default_value = new_value
+        variable.save()
+        return HttpResponse("")
+    else:
+        return HttpResponse("Fail")
 
 def edit_value(request):
     if request.is_ajax:
