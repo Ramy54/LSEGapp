@@ -36,6 +36,12 @@
 
 
 {% block content %}
+    <div class="page-geader" style="margin-bottom: 20px">
+        <h3>You are adding a host to <strong>{{ environment }}</strong> environment</h3>
+
+    </div>
+
+
     <form id="myForm" method="post" action="" >
     {% csrf_token %}
         <table >

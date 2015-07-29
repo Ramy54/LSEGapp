@@ -320,6 +320,18 @@ def edit_variable(request,id_var):
     return render(request, 'temp/edit_variable.html',locals())
 
 
+def edit_value(request):
+    if request.is_ajax:
+        new_value = request.POST['new_value']
+        component_var_id = request.POST['component_var_id']
+        component_variable = ComponentVariables.objects.get(id=component_var_id)
+        component_variable.value = new_value
+        component_variable.save()
+        return HttpResponse("")
+    else:
+        return HttpResponse("FAIL")
+
+
 
 
 # DELETE METHODS/VIEWS
@@ -420,18 +432,11 @@ def save_file(request,id_host):
 
     for component_variable in components_variables:
         variable = component_variable.variable.name
-        response.write(variable + ": " + component_variable.variable.default_value + "\n")
+        response.write(variable + ": ")
+        if component_variable.value=="":
+            response.write(component_variable.variable.default_value + "\n")
+        else:
+            response.write(component_variable.value + "\n")
 
     return response
 
-
-def edit_value(request):
-    if request.is_ajax:
-        new_value = request.POST['new_value']
-        component_var_id = request.POST['component_var_id']
-        component_variable = ComponentVariables.objects.get(id=component_var_id)
-        component_variable.value = new_value
-        component_variable.save()
-        return HttpResponse("")
-    else:
-        return HttpResponse("FAIL")
