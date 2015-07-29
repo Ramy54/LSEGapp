@@ -320,13 +320,6 @@ def edit_variable(request,id_var):
     return render(request, 'temp/edit_variable.html',locals())
 
 
-def edit_value(request,id_variable,new_value):
-    var = Variable.objects.get(id=id_variable)
-    var.default_value = new_value
-    var.save()
-    return redirect('index')
-
-
 
 
 # DELETE METHODS/VIEWS
@@ -384,8 +377,6 @@ def host_details(request,id_host):
     for host_role in host_roles:
         role_components = role_components + list(RoleComponents.objects.filter(host_role=host_role))
 
-
-
     return render(request, 'details/host_details.html',locals())
 
 def role_details(request,id_host,id_role):
@@ -427,9 +418,20 @@ def save_file(request,id_host):
 
     response['Content-Disposition'] = "attachment; filename=" + host.name + ".yaml"
 
-
     for component_variable in components_variables:
         variable = component_variable.variable.name
         response.write(variable + ": " + component_variable.variable.default_value + "\n")
 
     return response
+
+
+def edit_value(request):
+    if request.is_ajax:
+        new_value = request.POST['new_value']
+        component_var_id = request.POST['component_var_id']
+        component_variable = ComponentVariables.objects.get(id=component_var_id)
+        component_variable.value = new_value
+        component_variable.save()
+        return HttpResponse("")
+    else:
+        return HttpResponse("FAIL")

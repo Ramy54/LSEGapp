@@ -1,4 +1,8 @@
 {% extends "skeleton.html" %}
+{% load static %}
+{% block extrahead %}
+    <script type="text/javascript" src={% static 'js/my_js.js' %}> </script>
+{% endblock %}
 
 {% block content %}
 
@@ -26,20 +30,16 @@
 
                     {% for component_variables in components_variables %}
                         <td> {{ component_variables.variable.name }} </td>
-                        <td>
-                            <script>
-                                function myFunction() {
-                                    var value = "{{ component_variables.variable.default_value }}"
-                                    var new_value = prompt('Enter value',value)
-                                    var url = ''
-                                    url.replace('135','137')
-                                    location.href= url
-                                }
+                        {% if component_variables.value == "" %}
+                            <td>
+                                <a class="variable" id="{{ component_variables.id }}"> {{ component_variables.variable.default_value }}</a>
+                            </td>
+                        {% else %}
+                            <td>
+                                <a class="variable" id="{{ component_variables.id }}"> {{ component_variables.value }}</a>
+                            </td>
 
-                            </script>
-                        <a onclick="myFunction()">{{ component_variables.variable.default_value }}</a>
-
-                    </td>
+                        {% endif %}
                         </tr>
                         <tr>
                         <td></td>
