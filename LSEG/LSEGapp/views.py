@@ -342,6 +342,15 @@ def edit_value(request):
     else:
         return HttpResponse("FAIL")
 
+def set_default(request):
+    if request.is_ajax:
+        component_var_id = request.POST['component_var_id']
+        component_variable = ComponentVariables.objects.get(id=component_var_id)
+        component_variable.value = ""
+        component_variable.save()
+        return HttpResponse(locals())
+    else:
+        return HttpResponse("FAIL")
 
 
 

@@ -33,13 +33,15 @@
                         {% if component_variables.value == "" %}
                             <td>
                                 <a class="variable" id="{{ component_variables.id }}"> {{ component_variables.variable.default_value }}</a>
-                            </td>
                         {% else %}
                             <td>
                                 <a class="variable" id="{{ component_variables.id }}"> {{ component_variables.value }}</a>
-                            </td>
 
                         {% endif %}
+                            <button style="float: right;" type="button" class="btn btn-xs btn-danger" id="{{ component_variables.id }}">
+                                <span class="glyphicon glyphicon-repeat"></span>
+                            </button>
+                        </td>
                         </tr>
                         <tr>
                         <td></td>
