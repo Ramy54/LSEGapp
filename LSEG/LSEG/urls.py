@@ -52,6 +52,9 @@ urlpatterns = patterns('LSEGapp.views',
                        url(r'edit_role_template/(?P<id_role>\d+)$', 'edit_role_template'),
                        url(r'edit_component/(?P<id_host>\d+)/(?P<id_role>\d+)/(?P<id_component>\d+)$', 'edit_component'),
                        url(r'edit_role/(?P<id_host>\d+)/(?P<id_role>\d+)$', 'edit_role'),
+                       url(r'edit_value$', 'edit_value'),
+                       url(r'edit_default_value$', 'edit_default_value'),
+                       url(r'set_default$', 'set_default'),
 
 
 

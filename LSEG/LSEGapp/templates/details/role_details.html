@@ -1,4 +1,9 @@
 {% extends "skeleton.html" %}
+{% load static %}
+
+{% block extrahead %}
+    <script type="text/javascript" src={% static 'js/my_js.js' %}> </script>
+{% endblock %}
 
 {% block content %}
 
@@ -9,9 +14,9 @@
     <div class="row">
         <div class="col-md-10">
             <table class="table table-striped">
+
                 <thead>
                 <tr>
-
                     <th class="col-md-2">Host</th>
                     <th class="col-md-2">Role</th>
                     <th class="col-md-3">Components <button type="button" class="btn btn-xs btn-success">Add</button></th></th>
@@ -19,6 +24,7 @@
                     <th class="col-md-3">Values</th>
                 </tr>
                 </thead>
+
                 <tbody>
                 <tr>
                     <td><strong>{{ host }}</strong></td>
@@ -36,26 +42,20 @@
                             </button>
                         </td>
 
-                        {% for component_variable in role_component.list %}
+                        {% for component_variables in role_component.list %}
+                            <td> {{ component_variables.variable.name }} </td>
+                            {% if component_variables.value == "" %}
 
-                            <td>{{ component_variable.variable }}</td>
+                                <td>
+                                    <a class="variable" id="{{ component_variables.id }}">{{ component_variables.variable.default_value }}</a>
+                                    {% else %}
+                                <td style="width: 100%">
+                                <a style="width: 100%;" class="variable" id="{{ component_variables.id }}">{{ component_variables.value }}</a>
 
-
-                            <td><a onclick="myFunction()">{{ component_variable.variable.default_value }}</a></td>
-                            <script>
-                                function myFunction() {
-                                    var value = "default";
-                                    var new_value = prompt('Enter value',value);
-                                    var url = '';
-                                    location.href= url;
-                                }
-<<<<<<< HEAD
-
-
-
-=======
->>>>>>> 02c64c73f830ac2dcf0a8f7a84ccfd0b5b755dd5
-                            </script>
+                            {% endif %}
+                        <button title="Default is : {{component_variables.variable.default_value }}" style="float: right;" type="button" class="btn btn-xs btn-danger" id="{{ component_variables.id }}" name="old_value" >
+                            <span style="width: 100%" class="glyphicon glyphicon-repeat"></span>
+                        </button>
                             </tr>
                             <tr>
                             <td></td>

@@ -1,6 +1,10 @@
 {% extends 'skeleton.html' %}
 {% load LSEG_filters %}
 
+{% block extrahead %}
+
+{% endblock %}
+
 {% block content %}
 
     <div style="margin-top: 20px">
@@ -12,7 +16,7 @@
     </div>
 
     <div class="page-header">
-        <h3>Machine Table</h3>
+        <h3 id="id">Machine Table</h3>
     </div>
     <div class="row">
         <div class="col-md-6">
@@ -43,7 +47,7 @@
                         </td>
                         {% for host_role in group.list %}
                             <td>
-                               <a href="{% url "LSEGapp.views.role_details" group.grouper.id host_role.role.id %}"> {{ host_role.role.name }} </a>
+                                <a href="{% url "LSEGapp.views.role_details" group.grouper.id host_role.role.id %}"> {{ host_role.role.name }} </a>
                             </td>
                             </tr>
                             <tr>
