@@ -32,14 +32,14 @@
                         <td> {{ component_variables.variable.name }} </td>
                         {% if component_variables.value == "" %}
                             <td>
-                                <a class="variable" id="{{ component_variables.id }}"> {{ component_variables.variable.default_value }}</a>
+                                <a class="variable" id="{{ component_variables.id }}">{{ component_variables.variable.default_value }}</a>
                         {% else %}
-                            <td>
-                                <a class="variable" id="{{ component_variables.id }}"> {{ component_variables.value }}</a>
+                            <td style="width: 100%">
+                                <a style="width: 100%;" class="variable" id="{{ component_variables.id }}">{{ component_variables.value }}</a>
 
                         {% endif %}
-                            <button style="float: right;" type="button" class="btn btn-xs btn-danger" id="{{ component_variables.id }}">
-                                <span class="glyphicon glyphicon-repeat"></span>
+                            <button title="Default is : {{component_variables.variable.default_value }}" style="float: right;" type="button" class="btn btn-xs btn-danger" id="{{ component_variables.id }}" name="old_value" >
+                                <span style="width: 100%" class="glyphicon glyphicon-repeat"></span>
                             </button>
                         </td>
                         </tr>

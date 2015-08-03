@@ -26,7 +26,7 @@
                 </thead>
 
                 <tbody>
-                    <tr>
+                <tr>
                     <td><strong>{{ host }}</strong></td>
                     <td><strong>{{ role }}</strong></td>
 
@@ -42,10 +42,20 @@
                             </button>
                         </td>
 
-                        {% for component_variable in role_component.list %}
+                        {% for component_variables in role_component.list %}
+                            <td> {{ component_variables.variable.name }} </td>
+                            {% if component_variables.value == "" %}
 
-                            <td>{{ component_variable.variable }}</td>
-                            <td><a class="variable" id={{ component_variable.id }}>{{ component_variable.variable.default_value }}</a></td>
+                                <td>
+                                    <a class="variable" id="{{ component_variables.id }}">{{ component_variables.variable.default_value }}</a>
+                                    {% else %}
+                                <td style="width: 100%">
+                                <a style="width: 100%;" class="variable" id="{{ component_variables.id }}">{{ component_variables.value }}</a>
+
+                            {% endif %}
+                        <button title="Default is : {{component_variables.variable.default_value }}" style="float: right;" type="button" class="btn btn-xs btn-danger" id="{{ component_variables.id }}" name="old_value" >
+                            <span style="width: 100%" class="glyphicon glyphicon-repeat"></span>
+                        </button>
                             </tr>
                             <tr>
                             <td></td>

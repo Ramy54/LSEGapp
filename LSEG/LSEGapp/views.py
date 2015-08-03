@@ -4,7 +4,7 @@ from django.shortcuts import *
 from LSEGapp.forms import *
 from LSEGapp.models import *
 from django.forms.formsets import *
-from django.core.files import File
+from django.core import serializers
 
 # MAIN PAGES VIEWS
 def bootstrap(request):
@@ -338,7 +338,7 @@ def edit_value(request):
         component_variable = ComponentVariables.objects.get(id=component_var_id)
         component_variable.value = new_value
         component_variable.save()
-        return HttpResponse("")
+        return HttpResponse(" Successful edited value")
     else:
         return HttpResponse("FAIL")
 
@@ -348,9 +348,11 @@ def set_default(request):
         component_variable = ComponentVariables.objects.get(id=component_var_id)
         component_variable.value = ""
         component_variable.save()
-        return HttpResponse(locals())
+        value = component_variable.variable.default_value
+        data = {'old_value': value}
+        return JsonResponse(data)
     else:
-        return HttpResponse("FAIL")
+        return HttpResponse("Ramy you failed updating")
 
 
 
