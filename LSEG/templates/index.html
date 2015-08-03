@@ -1,5 +1,4 @@
 {% extends 'skeleton.html' %}
-{% load LSEG_filters %}
 
 {% block extrahead %}
 
@@ -19,12 +18,12 @@
         <h3 id="id">Machine Table</h3>
     </div>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-5">
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th>Host <button type="button" class="btn btn-xs btn-success" onclick="location.href='{% url "LSEGapp.views.add_host" environment.id %}';">Add</button></th>
-                    <th>Role</th>
+                    <th class="col-md-3">Host <button type="button" class="btn btn-xs btn-success" onclick="location.href='{% url "LSEGapp.views.add_host" environment.id %}';">Add</button></th>
+                    <th class="col-md-4">Role</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -33,17 +32,14 @@
                     <tr>
                         <td>
                             <strong><a href="{% url "LSEGapp.views.host_details_2" group.grouper.id %}">{{ group.grouper }}</a></strong>
-
-
-                            <button type="button" class="btn btn-xs btn-info" onclick="location.href='{% url "LSEGapp.views.edit_host" group.grouper.id  %}';">
-                                <span   class="glyphicon glyphicon-edit"></span>
-                            </button>
-                            <button type="button" class="btn btn-xs btn-danger" onclick="location.href='{% url "LSEGapp.views.delete_host" group.grouper.id  %}';">
-                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                            </button>
-                            <button type="button" class="btn btn-xs btn-success" onclick="location.href='{% url "LSEGapp.views.save_file" group.grouper.id %}';">
+                            <button style="float: right;" class="btn btn-xs btn-success" onclick="location.href='{% url "LSEGapp.views.save_file" group.grouper.id %}';">
                                 <span class="glyphicon glyphicon-save-file" aria-hidden="true"></span>
                             </button>
+                            
+                            <button style="float: right"  class="btn btn-xs btn-danger" onclick="location.href='{% url "LSEGapp.views.delete_host" group.grouper.id  %}';">
+                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                            </button>
+
                         </td>
                         {% for host_role in group.list %}
                             <td>

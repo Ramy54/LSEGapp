@@ -8,7 +8,7 @@
 {% block content %}
 
     <div class="page-header">
-        <h2><strong>{{ host.name }} - {{ role.name }}</strong></h2>
+        <h2><strong>{{ host.name }} </strong> - {{ role.name }}</h2>
     </div>
 
     <div class="row">
@@ -19,7 +19,7 @@
                 <tr>
                     <th class="col-md-2">Host</th>
                     <th class="col-md-2">Role</th>
-                    <th class="col-md-3">Components <button type="button" class="btn btn-xs btn-success">Add</button></th></th>
+                    <th class="col-md-3">Components</th>
                     <th class="col-md-3">Variables</th>
                     <th class="col-md-3">Values</th>
                 </tr>
@@ -33,13 +33,7 @@
                     {% regroup components_variables by role_component  as role_component_list %} <!-- the list of host_roles is regrouped by host -->
                     {% for role_component in role_component_list %}
                         <td>
-                            <a  href="{% url "LSEGapp.views.component_details" host.id role.id role_component.grouper.component.id  %}"><strong>{{ role_component.grouper.component }}</strong></a>
-                            <button type="button" class="btn btn-xs btn-info" onclick="location.href='{% url "LSEGapp.views.edit_component" host.id role.id role_component.grouper.component.id  %}';">
-                                <span   class="glyphicon glyphicon-edit"></span>
-                            </button>
-                            <button type="button" id="submit" class="btn btn-xs btn-danger" onclick="location.href='{% url "LSEGapp.views.delete_component" host.id role.id role_component.grouper.component.id  %}';"  >
-                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                            </button>
+                            <strong>{{ role_component.grouper.component }}</strong></a>
                         </td>
 
                         {% for component_variables in role_component.list %}

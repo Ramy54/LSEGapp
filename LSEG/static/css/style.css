@@ -7,6 +7,10 @@ h2{
     color: darkgoldenrod;
 }
 
+h2{
+    color: darkgoldenrod;
+}
+
 #home {
     color: aquamarine
 }
@@ -27,4 +31,9 @@ h2{
 #table-striped {
     color: red;
     width: auto;
+}
+
+#btn {
+    margin-left: 50px;
+
 }
