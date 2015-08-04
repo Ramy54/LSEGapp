@@ -3,7 +3,7 @@ from django.db import models
 
 # Environment Class
 class Environment(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
     description = models.TextField(blank=True)
 
     class Meta:
@@ -16,7 +16,7 @@ class Environment(models.Model):
 
 # Business Application
 class BusinessApplication(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
     prefix = models.CharField(max_length=20, blank=True)
 
     class Meta:
@@ -29,7 +29,7 @@ class BusinessApplication(models.Model):
 
 # Host Class 
 class Host(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
     environment = models.ForeignKey(Environment)
 
     class Meta:
@@ -55,7 +55,7 @@ class HostBusinessApplication(models.Model):
 
 # Role Class
 class Role(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
 
     class Meta:
         verbose_name = '05- Role'
@@ -79,7 +79,7 @@ class RoleBusinessApplication(models.Model):
 
 # Component Class
 class Component(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
 
     class Meta:
         verbose_name = '06- Component'
@@ -91,7 +91,7 @@ class Component(models.Model):
 
 # Variable Class
 class Variable(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
     default_value = models.CharField(max_length=100)
     type = models.CharField(max_length=50)
     required = models.BooleanField()
