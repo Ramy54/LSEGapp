@@ -46,6 +46,8 @@ def role_template(request):
         if form2.is_valid():
             if formset.is_valid():
                 name = form2.cleaned_data['name']    #Get name from the form
+                business_application = form2.cleaned_data['business_application']
+
                 role = Role(name=name)
                 role.save()
 

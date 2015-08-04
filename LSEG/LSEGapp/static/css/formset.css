@@ -1,0 +1,25 @@
+.add-row {
+    padding-left:18px;
+    background:url(/static/images/add.png) no-repeat left center;
+}
+.delete-row {
+    float:right;
+    display:block;
+    margin:5px 0 0 5px;
+    text-indent:-6000px;
+    background:url(/static/images/delete.png) no-repeat left center;
+    width:16px;
+    height:16px;
+}
+tr.row1 td { background-color: #f9f9f9; }
+tr.row2 td { background-color: #f3f3f3; }
+tr.row3 td { background-color: #ededed; }
+
+th {
+    text-align: left;
+    margin: 5px 0 0 5px;
+}
+
+.component_table{
+    color: darkgoldenrod;
+}

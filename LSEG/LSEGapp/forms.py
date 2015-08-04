@@ -19,7 +19,9 @@ class HostForm(forms.Form):
 
 # TO ADD A ROLE TEMPLATE
 class RoleForm(forms.Form):
+    business_application = forms.ModelChoiceField(queryset=BusinessApplication.objects.all(),label="Business Application")
     name = forms.CharField()
+
 
 # TO ADD A COMPONENT TEMPLATE
 class ComponentForm(forms.Form):
