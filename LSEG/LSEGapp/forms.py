@@ -50,11 +50,3 @@ class AddRoleForm(forms.Form):
 
 
 
-class RoleForm2(forms.Form):
-    role = forms.ModelChoiceField(queryset=Role.objects.all())
-    def __init__(self, *args, **kwargs):
-        super(RoleForm2, self).__init__(*args, **kwargs)
-        self.fields['role'] = forms.ModelChoiceField("life is good")
-
-
-

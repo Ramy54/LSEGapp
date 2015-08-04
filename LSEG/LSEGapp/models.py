@@ -17,6 +17,7 @@ class Environment(models.Model):
 # Business Application
 class BusinessApplication(models.Model):
     name = models.CharField(max_length=50)
+    prefix = models.CharField(max_length=20, blank=True)
 
     class Meta:
         verbose_name = '02- Business Application'

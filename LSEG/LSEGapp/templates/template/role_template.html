@@ -1,5 +1,7 @@
 {% extends 'skeleton.html' %}
 
+{% load static %}
+
 {% block extrahead %}
     <script type="text/javascript">
         $(function() {
@@ -30,6 +32,7 @@
         {% csrf_token %}
 
         <div style="margin-bottom: 10px">
+            <br> <strong> {{ form2.business_application.label }} :</strong>  {{ form2.business_application }}
             <br> <strong> {{ form2.name.label }} :</strong>  {{ form2.name }}
         </div>
 

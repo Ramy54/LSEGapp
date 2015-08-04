@@ -53,6 +53,9 @@ def role_template(request):
                 role = Role(name=name)
                 role.save()
 
+                role_ba = RoleBusinessApplication(role=role,business_application=business_application)
+                role_ba.save()
+
                 for form in formset:
                     component = form.cleaned_data['component']
                     role_component = RoleComponentsTemplate(role=role,component=component)
@@ -236,6 +239,7 @@ def edit_role(request,id_host,id_role):
 def edit_role_template(request, id_role):
     ComponentFormset = formsets.formset_factory(AddComponentForm,extra=0)
     role = Role.objects.get(id=id_role)
+    role_ba = RoleBusinessApplication.objects.get(role=role)
     list_of_components = RoleComponentsTemplate.objects.filter(role=role).values('component')
 
     if request.method == 'POST':
@@ -256,7 +260,7 @@ def edit_role_template(request, id_role):
         return redirect(role_template)
     else:
         formset = ComponentFormset(initial=list_of_components)
-        form2 = RoleForm(initial={'name':role.name})
+        form2 = RoleForm(initial={'name':role.name, 'business_application':role_ba.business_application})
 
     return render(request, 'template/edit_role_template.html',locals())
 

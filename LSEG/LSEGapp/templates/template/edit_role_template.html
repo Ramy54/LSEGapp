@@ -56,37 +56,33 @@
         <h2>Edit role : <strong>{{ role }}</strong> </h2>
     </div>
 
+
     <form id="myForm" method="post" action="">
+
         {% csrf_token %}
-        <table >
-            <tr>
-                <th>{{ form2.name.label }} </th>
-                <td>{{ form2.name }}</td>
-            </tr>
-        </table>
 
-        <table id="id_contact_info_table"  border="0" cellpadding="0" cellspacing="5">
-            <tr > <th scope="col" style="margin: 50px  5px 5px 10px;">Variable</th>
+        <div style="margin-bottom: 10px">
+            <br> <strong> {{ form2.business_application.label }} :</strong>  {{ form2.business_application }}
+            <br> <strong> {{ form2.name.label }} :</strong>  {{ form2.name }}
+        </div>
+
+
+        <div class="">
+            <div style="display: inline-block;" >
                 {% for form in formset.forms %}
-                    <td style="text-align:center;">{{ form.component }}</td>
-                    </tr>
-                    <tr>
-                    <td></td>
+                    <div class= "component_formset"  style="padding-bottom:6px; border-bottom:1px dotted #ccc; margin-bottom:6px;">
+                        <strong>{{ form.component.label }} : </strong>
+                        {{ form.component }}
+                    </div>
                 {% endfor %}
-                </tr>
-        </table>
-        <p>
-            {{ formset.management_form }}
-            <input type="submit" class="btn btn-s btn-success" value="Save components" style=""/>
-        </p>
+            </div>
+            <p>
+                {{ formset.management_form }}
+                <input type="submit" class="btn btn-s btn-success" value="Add component" style=""/>
+            </p>
+        </div>
+
     </form>
-
-
-
-
-
-
-
 
 
 {% endblock %}
