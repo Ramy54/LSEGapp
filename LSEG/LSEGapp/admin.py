@@ -50,8 +50,8 @@ class RoleComponentsAdmin(admin.ModelAdmin):
     ordering = ('host_role', 'component')
 
 class ComponentVariablesAdmin(admin.ModelAdmin):
-    list_display = ('role_component', 'variable')
-    list_filter = ('role_component', 'variable')
+    list_display = ('role_component', 'variable','value')
+    list_filter = ('role_component', 'variable','value')
     ordering = ('role_component', 'variable')
 
 

@@ -18,7 +18,7 @@
                 </thead>
                 <tbody>
 
-                <td> <strong>{{ host }}</strong></td>
+                <td> <strong><a  href="{% url "LSEGapp.views.host_details_2" host.id %}">{{ host }}</a></strong></td>
                 {% regroup role_components by host_role as host_role_list %} <!-- the list of host_roles is regrouped by host -->
                 {% for host_role in host_role_list %}
 

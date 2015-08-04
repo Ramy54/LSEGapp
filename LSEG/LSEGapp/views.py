@@ -5,7 +5,7 @@ from django.shortcuts import *
 from LSEGapp.forms import *
 from LSEGapp.models import *
 from django.forms.formsets import *
-
+from django.core import serializers
 
 
 # MAIN PAGES VIEWS
@@ -48,6 +48,8 @@ def role_template(request):
         if form2.is_valid():
             if formset.is_valid():
                 name = form2.cleaned_data['name']    #Get name from the form
+                business_application = form2.cleaned_data['business_application']
+
                 role = Role(name=name)
                 role.save()
 
@@ -59,10 +61,10 @@ def role_template(request):
     else:
         form2 = RoleForm()
         formset = ComponentFormset()
-    return render(request, 'temp/role_template.html',locals())
+    return render(request, 'template/role_template.html',locals())
 
 def component_template(request):
-    VariableFormset = formsets.formset_factory(AddVariableForm)
+    VariableFormset = formsets.formset_factory(AddVariableForm, can_delete=True)
     components_variables = ComponentVariablesTemplate.objects.all()
 
     if request.method == 'POST':
@@ -83,7 +85,7 @@ def component_template(request):
         form2 = ComponentForm()
         formset = VariableFormset()
 
-    return render(request, 'temp/component_template.html',locals())
+    return render(request, 'template/component_template.html',locals())
 
 def variables(request):
     variables = Variable.objects.all()  #The variables to be given to the template
@@ -102,7 +104,7 @@ def variables(request):
     else:
         form = VariableForm()
 
-    return render(request, 'temp/variables.html', locals())
+    return render(request, 'template/variables.html', locals())
 
 
 
@@ -196,7 +198,7 @@ def edit_host(request,id_host):
 
                     save_roles(host,roles_id)
 
-                return redirect(index)
+                return redirect(host_details_2,id_host=id_host)
 
     else:
         form2 = EnvironmentForm2(initial={'environment': environment})
@@ -256,7 +258,7 @@ def edit_role_template(request, id_role):
         formset = ComponentFormset(initial=list_of_components)
         form2 = RoleForm(initial={'name':role.name})
 
-    return render(request, 'temp/edit_role_template.html',locals())
+    return render(request, 'template/edit_role_template.html',locals())
 
 def edit_component(request,id_host,id_role,id_component):
     host = Host.objects.get(id=id_host)
@@ -309,7 +311,7 @@ def edit_component_template(request,id_component):
         formset = VariableFormset(initial=list_of_variables)
         form2 = ComponentForm(initial={'name': component.name})
 
-    return render(request, 'temp/edit_component_template.html',locals())
+    return render(request, 'template/edit_component_template.html',locals())
 
 def edit_variable(request,id_var):
     var = Variable.objects.get(id=id_var)
@@ -320,15 +322,42 @@ def edit_variable(request,id_var):
     else:
         form= VariableForm(instance=var)
 
-    return render(request, 'temp/edit_variable.html',locals())
+    return render(request, 'template/edit_variable.html',locals())
 
 
-def edit_value(request,id_variable,new_value):
-    var = Variable.objects.get(id=id_variable)
-    var.default_value = new_value
-    var.save()
-    return redirect('index')
+def edit_default_value(request):
+    if request.is_ajax():
+        new_value = request.POST['new_value']
+        variable_id = request.POST['var_id']
+        variable = Variable.objects.get(id=variable_id)
+        variable.default_value = new_value
+        variable.save()
+        return HttpResponse("")
+    else:
+        return HttpResponse("Fail")
 
+def edit_value(request):
+    if request.is_ajax:
+        new_value = request.POST['new_value']
+        component_var_id = request.POST['component_var_id']
+        component_variable = ComponentVariables.objects.get(id=component_var_id)
+        component_variable.value = new_value
+        component_variable.save()
+        return HttpResponse(" Successful edited value")
+    else:
+        return HttpResponse("FAIL")
+
+def set_default(request):
+    if request.is_ajax:
+        component_var_id = request.POST['component_var_id']
+        component_variable = ComponentVariables.objects.get(id=component_var_id)
+        component_variable.value = ""
+        component_variable.save()
+        value = component_variable.variable.default_value
+        data = {'old_value': value}
+        return JsonResponse(data)
+    else:
+        return HttpResponse("Ramy you failed updating")
 
 
 
@@ -382,24 +411,40 @@ def delete_component(request,id_host,id_role,id_component):
 def host_details(request,id_host):
     host = Host.objects.get(id=id_host)
     host_roles = HostRole.objects.filter(host=host)
-    role_components = []
-
-    for host_role in host_roles:
-        role_components = role_components + list(RoleComponents.objects.filter(host_role=host_role))
-
-
+    role_components = RoleComponents.objects.filter(host_role=host_roles)
 
     return render(request, 'details/host_details.html',locals())
+
+
+def host_details_2(request,id_host):
+    host = Host.objects.get(id=id_host)
+    host_roles = HostRole.objects.filter(host=host)
+    roles_components = RoleComponents.objects.filter(host_role=host_roles)
+    object_list = []
+
+    role_components = roles_components[0]
+    variable_list = ComponentVariables.objects.filter(role_component=role_components)
+    object = [ComponentVariableList(role_component=role_components,variable_list=variable_list)]
+    object_list = object_list + object
+    role_component_old = role_components
+
+    for role_components in roles_components[1:]:
+        variable_list = ComponentVariables.objects.filter(role_component=role_components)
+        if role_components.host_role.role.name == role_component_old.host_role.role.name:
+            role_components.host_role.role.name = ""
+        object = [ComponentVariableList(role_component=role_components,variable_list=variable_list)]
+        object_list = object_list + object
+        role_component_old = role_components
+
+    return render(request,'details/host_details2.html',locals())
+
 
 def role_details(request,id_host,id_role):
     host = Host.objects.get(id=id_host)
     role = Role.objects.get(id=id_role)
     host_role = HostRole.objects.get(host=host,role=role)
     role_components = RoleComponents.objects.filter(host_role=host_role)
-
-    components_variables = []
-    for role_component in role_components:
-        components_variables = components_variables + list(ComponentVariables.objects.filter(role_component=role_component))
+    components_variables = ComponentVariables.objects.filter(role_component=role_components)
 
     return render(request, 'details/role_details.html',locals())
 
@@ -426,14 +471,17 @@ def save_file(request,id_host):
     host_roles = HostRole.objects.all().filter(host=host)
     roles_components = RoleComponents.objects.all().filter(host_role = host_roles)
     components_variables = ComponentVariables.objects.all().filter(role_component = roles_components)
-    response = HttpResponse(content_type='text/csv')
+    response = HttpResponse(content_type='text/txt')
 
     response['Content-Disposition'] = "attachment; filename=" + host.name + ".yaml"
 
-    writer = csv.writer(response, delimiter=':')
     for component_variable in components_variables:
         variable = component_variable.variable.name
-        writer.writerow([variable, component_variable.variable.default_value])
+        response.write(variable + ": ")
+        if component_variable.value=="":
+            response.write(component_variable.variable.default_value + "\n")
+        else:
+            response.write(component_variable.value + "\n")
 
     return response
 
