@@ -60,7 +60,7 @@ def role_template(request):
     return render(request, 'template/role_template.html',locals())
 
 def component_template(request):
-    VariableFormset = formsets.formset_factory(AddVariableForm)
+    VariableFormset = formsets.formset_factory(AddVariableForm, can_delete=True)
     components_variables = ComponentVariablesTemplate.objects.all()
 
     if request.method == 'POST':

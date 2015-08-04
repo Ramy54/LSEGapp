@@ -70,10 +70,13 @@
                         row.hide();
                         forms = $('.' + options.formCssClass).not(':hidden');
                     } else {
-                        row.remove();
-                        // Update the TOTAL_FORMS count:
                         forms = $('.' + options.formCssClass).not('.formset-custom-template');
-                        totalForms.val(forms.length);
+                        if (forms.length != 1) {
+                            row.remove();
+                            // Update the TOTAL_FORMS count:
+                            forms = $('.' + options.formCssClass).not('.formset-custom-template');
+                            totalForms.val(forms.length);
+                        }
                     }
                     for (var i=0, formCount=forms.length; i<formCount; i++) {
                         // Apply `extraClasses` to form rows so they're nicely alternating:
@@ -158,7 +161,7 @@
                 // "add" button in a new table row:
                 var numCols = $$.eq(0).children().length,   // This is a bit of an assumption :|
                     buttonRow = $('<tr><td colspan="' + numCols + '"><a class="' + options.addCssClass + '" href="javascript:void(0)">' + options.addText + '</a></tr>')
-                                .addClass(options.formCssClass + '-add');
+                        .addClass(options.formCssClass + '-add');
                 $$.parent().append(buttonRow);
                 if (hideAddButton) buttonRow.hide();
                 addButton = buttonRow.find('a');
