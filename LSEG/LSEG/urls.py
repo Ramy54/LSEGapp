@@ -23,7 +23,6 @@ urlpatterns = patterns('LSEGapp.views',
                        # MAIN URLS
                        url(r'^admin/', include(admin.site.urls)),
                        url(r'^$','index'),
-                       url(r'^bootstrap','bootstrap'),
                        url(r'^index$','index'),
                        url(r'^skeleton$','skeleton'),
 
@@ -54,7 +53,6 @@ urlpatterns = patterns('LSEGapp.views',
                        url(r'edit_role/(?P<id_host>\d+)/(?P<id_role>\d+)$', 'edit_role'),
                        url(r'edit_value$', 'edit_value'),
                        url(r'edit_default_value$', 'edit_default_value'),
-                       url(r'set_default$', 'set_default'),
 
 
 
@@ -66,8 +64,11 @@ urlpatterns = patterns('LSEGapp.views',
                        url(r'^role_delete/(?P<id_host>\d+)/(?P<id_host_role>\d+)$', 'delete_role'),
                        url(r'^component_delete/(?P<id_host>\d+)/(?P<id_role>\d+)/(?P<id_component>\d+)$', 'delete_component'),
 
-                       #SAVE YAML FILE
-                       url(r'save_file/(?P<id_host>\d+)$','save_file')
+                       #CUSTOM URLS
+                       url(r'save_file/(?P<id_host>\d+)$','save_file'),
+                       url(r'set_default$', 'set_default'),
+                       url(r'autocompletion_role_name', 'autocompletion_role_name'),
+                       url(r'role_filter', 'role_filter'),
 
 
 

@@ -2,17 +2,13 @@
 
 {% load static %}
 
+{% block customized_javascript %}
+    <script type="text/javascript" src="{% static 'js/role_template.js' %}"></script>
+{% endblock %}
+
 {% block extrahead %}
-    <script type="text/javascript">
-        $(function() {
-            $('.component_formset').formset({
-                extraClasses: ['row1']
-            })
-        })
-    </script>
     <!-- CSS for formset rendering -->
     <link rel="stylesheet" href="{% static 'css/formset.css' %}" />
-
 {% endblock %}
 
 {% block nav %}
@@ -34,7 +30,7 @@
         <div style="margin-bottom: 10px">
             <br> <strong> {{ form2.business_application.label }} :</strong>  {{ form2.business_application }}
             <br> <strong> {{ form2.name.label }} :</strong>  {{ form2.name }}
-            <span style="display: inline-block; color: red; ">{{ form2.non_field_errors }}</span>
+            <span style="display: inline-block; color: red;">{{ form2.non_field_errors }}</span> <!-- Errors generated in red if the form is not valid -->
         </div>
 
 
@@ -49,7 +45,7 @@
             </div>
             <p>
                 {{ formset.management_form }}
-                <input type="submit" class="btn btn-s btn-success" value="Add component" style=""/>
+                <input type="submit" class="btn btn-s btn-success" value="Add role" style=""/>
             </p>
         </div>
 

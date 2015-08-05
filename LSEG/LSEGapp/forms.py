@@ -2,6 +2,7 @@ from LSEGapp.models import *
 from django import *
 from django.forms import *
 from django import forms
+from django.forms.util import ErrorList
 
 
 #TO ADD AN ENVIRONMENT
@@ -13,9 +14,13 @@ class EnvironmentForm2(forms.Form):
     environment = forms.ModelChoiceField(queryset=Environment.objects.all(),label="Environment",initial=1)
 
 # TO ADD A HOST
+
+
 class HostForm(forms.Form):
-    name = forms.CharField()
+    name = forms.CharField(required=True)
+
     business_application = forms.ModelChoiceField(queryset=BusinessApplication.objects.all(),label="Business Application")
+
 
 # TO ADD A ROLE TEMPLATE
 class RoleForm(forms.Form):
@@ -26,10 +31,11 @@ class RoleForm(forms.Form):
         cleaned_data = self.cleaned_data
         name = cleaned_data['name']
 
-        if name and Role.objects.get(name=name):
+        if Role.objects.filter(name=name).exists():
             raise forms.ValidationError("This role already exist")
 
         return cleaned_data
+
 
 
 # TO ADD A COMPONENT TEMPLATE
@@ -39,11 +45,11 @@ class ComponentForm(forms.Form):
 # TO ADD VARIABLES
 class VariableForm(forms.ModelForm):
     class Meta:
-            model = Variable
-            fields = ['name','default_value','type','required','description']
-            widgets = {
-                'description': forms.Textarea(attrs={'rows':2,'cols':40})
-            }
+        model = Variable
+        fields = ['name','default_value','type','required','description']
+        widgets = {
+            'description': forms.Textarea(attrs={'rows':2,'cols':40})
+        }
 
 
 #FORM USED IN FORMSETS
@@ -55,7 +61,12 @@ class AddVariableForm(forms.Form):
     variable = forms.ModelChoiceField(queryset=Variable.objects.all(), label="Variable")
 
 class AddRoleForm(forms.Form):
-    role = forms.ModelChoiceField(queryset=Role.objects.none(), label="Role")
+    roles = Role.objects.all()
+    choices = []
+    for role in roles:
+        choices.append((role.id,role.name))
+
+    name = forms.ChoiceField(choices=choices, label="Role")
 
 
 

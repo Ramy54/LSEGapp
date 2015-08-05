@@ -5,12 +5,12 @@ from django.shortcuts import *
 from LSEGapp.forms import *
 from LSEGapp.models import *
 from django.forms.formsets import *
-from django.core import serializers
+from django.db import IntegrityError
+from django import forms
+from django.forms.utils import ErrorList
 
 
 # MAIN PAGES VIEWS
-def bootstrap(request):
-    return render(request, 'bootstrap.html')
 
 def index(request):
     environment = Environment.objects.first()
@@ -122,23 +122,29 @@ def add_host(request,id_env):
         formset = RoleFormset(request.POST)
 
         if form2.is_valid() and formset.is_valid():
+            try:
+                name = form2.cleaned_data['name']    #Get name from the form
+                business_application = form2.cleaned_data['business_application']
+                host = Host(name=name, environment=environment)
+                host.save()                         #Add a host
+                host_business_application = HostBusinessApplication(business_application=business_application,host=host)
+                host_business_application.save()    #Add a host_business_app
 
-            name = form2.cleaned_data['name']    #Get name from the form
-            business_application = form2.cleaned_data['business_application']
-            host = Host(name=name, environment=environment)
-            host.save()                         #Add a host
-            host_business_application = HostBusinessApplication(business_application=business_application,host=host)
-            host_business_application.save()    #Add a host_business_app
+                roles_id = []
+                for form in formset:
+                    role_id = form.cleaned_data['name']
+                    role = Role.objects.get(id=role_id)
+                    id = [role.id]
+                    roles_id = roles_id + id
 
-            roles_id = []
+                save_roles(host,roles_id)
+                return redirect(index)
 
-            for form in formset:
-                role = form.cleaned_data['role']
-                id = [role.id]
-                roles_id = roles_id + id
-
-            save_roles(host,roles_id)
-            return redirect(index)
+            except IntegrityError:
+                errors = ErrorList()
+                errors = form2._errors.setdefault(
+                forms.forms.NON_FIELD_ERRORS, errors)
+                errors.append('Sorry, this username is already in use.')
 
     else:
         form2 = HostForm()
@@ -351,17 +357,7 @@ def edit_value(request):
     else:
         return HttpResponse("FAIL")
 
-def set_default(request):
-    if request.is_ajax:
-        component_var_id = request.POST['component_var_id']
-        component_variable = ComponentVariables.objects.get(id=component_var_id)
-        component_variable.value = ""
-        component_variable.save()
-        value = component_variable.variable.default_value
-        data = {'old_value': value}
-        return JsonResponse(data)
-    else:
-        return HttpResponse("Ramy you failed updating")
+
 
 
 
@@ -464,11 +460,35 @@ def component_details(request,id_host,id_role,id_component):
 
 
 # DISPLAY USED FOR JAVASCRIPT RENDERING OF FORMSET
-def display_data(request, data, **kwargs):
-    return render_to_response('posted-data.html', dict(data=data, **kwargs),
-                              context_instance=RequestContext(request))
 
 
+
+
+
+
+# CUSTOM VIEWS
+
+def set_default(request):
+    if request.is_ajax:
+        component_var_id = request.POST['component_var_id']
+        component_variable = ComponentVariables.objects.get(id=component_var_id)
+        component_variable.value = ""
+        component_variable.save()
+        value = component_variable.variable.default_value
+        data = {'old_value': value}
+        return JsonResponse(data)
+    else:
+        return HttpResponse("Ramy you failed")
+
+def autocompletion_role_name(request):
+    if request.is_ajax:
+        business_app = request.POST['business_app']
+        ba = BusinessApplication.objects.get(name=business_app)
+        prefix = ba.prefix
+        data = {'prefix': prefix}
+        return JsonResponse(data)
+    else:
+        return HttpResponse("Ramy you failed")
 
 def save_file(request,id_host):
     host = Host.objects.get(id=id_host)
@@ -489,11 +509,18 @@ def save_file(request,id_host):
 
     return response
 
-def get_roles(request, business_app_id):
-    business_app = BusinessApplication.get(id=business_app_id)
-    roles = RoleBusinessApplication.objects.filter(business_application=business_app)
-    roles_dict = {}
-    for role in roles:
-        roles_dict[role.role.id] = role.role.name
-    return HttpResponse(json.dumps(roles_dict), mimetype="application/json")
+def role_filter(request):
+    if request.is_ajax:
+        business_app= request.POST['business_app']
+        ba= BusinessApplication.objects.get(name=business_app)
+        roles_ba = RoleBusinessApplication.objects.filter(business_application=ba)
+        roles = []
+        for role_ba in roles_ba:
+            roles = roles + [role_ba.role]
 
+        data = {}
+        for role in roles:
+            data[role.id] = role.name
+        return JsonResponse(data)
+    else:
+        return HttpResponse("Ramy you failed")

@@ -26,7 +26,12 @@
     <script type="text/javascript" src="/static/js/jquery.formset.js"></script>
     <script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
 
+    {% block customized_javascript %}
+    <script type="text/javascript" src="{% static 'js/my_js.js' %}"></script>
+    {% endblock %}
+
     {% block extrahead %}{% endblock %}
+
 </head>
 
 <body role="document">
