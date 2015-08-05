@@ -11,7 +11,6 @@ $(function(){
 
     $('#id_business_application').change(function(){
         var business_app = $(this).find(":selected").text(); // value of the selected business application in the dropdown
-
         $.ajax({
             url: "/role_filter",
             type: "POST",

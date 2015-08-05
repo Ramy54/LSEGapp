@@ -121,7 +121,7 @@ def add_host(request,id_env):
         form2 = HostForm(request.POST, auto_id=True )
         formset = RoleFormset(request.POST)
 
-        if form2.is_valid() and formset.is_valid():
+        if form2.is_valid():
             try:
                 name = form2.cleaned_data['name']    #Get name from the form
                 business_application = form2.cleaned_data['business_application']
@@ -132,19 +132,17 @@ def add_host(request,id_env):
 
                 roles_id = []
                 for form in formset:
-                    role_id = form.cleaned_data['name']
-                    role = Role.objects.get(id=role_id)
-                    id = [role.id]
-                    roles_id = roles_id + id
+                    if form.is_valid:
+                        role = form.cleaned_data['role']
+                        id = [role.id]
+                        roles_id = roles_id + id
 
                 save_roles(host,roles_id)
                 return redirect(index)
 
             except IntegrityError:
-                errors = ErrorList()
-                errors = form2._errors.setdefault(
-                forms.forms.NON_FIELD_ERRORS, errors)
-                errors.append('Sorry, this username is already in use.')
+                errors = form2._errors.setdefault("name", ErrorList())
+                errors.append(u"This host already exists")
 
     else:
         form2 = HostForm()
@@ -509,15 +507,18 @@ def save_file(request,id_host):
 
     return response
 
+
 def role_filter(request):
     if request.is_ajax:
         business_app= request.POST['business_app']
-        ba= BusinessApplication.objects.get(name=business_app)
-        roles_ba = RoleBusinessApplication.objects.filter(business_application=ba)
-        roles = []
-        for role_ba in roles_ba:
-            roles = roles + [role_ba.role]
-
+        if business_app != "All":
+            ba= BusinessApplication.objects.get(name=business_app)
+            roles_ba = RoleBusinessApplication.objects.filter(business_application=ba).order_by('role')
+            roles = []
+            for role_ba in roles_ba:
+                roles = roles + [role_ba.role]
+        else:
+            roles = Role.objects.all().order_by('name')
         data = {}
         for role in roles:
             data[role.id] = role.name

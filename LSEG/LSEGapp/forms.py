@@ -19,12 +19,12 @@ class EnvironmentForm2(forms.Form):
 class HostForm(forms.Form):
     name = forms.CharField(required=True)
 
-    business_application = forms.ModelChoiceField(queryset=BusinessApplication.objects.all(),label="Business Application")
+    business_application = forms.ModelChoiceField(queryset=BusinessApplication.objects.all().order_by('name'),label="Business Application", empty_label=None, initial=0)
 
 
 # TO ADD A ROLE TEMPLATE
 class RoleForm(forms.Form):
-    business_application = forms.ModelChoiceField(queryset=BusinessApplication.objects.all(),label="Business Application")
+    business_application = forms.ModelChoiceField(queryset=BusinessApplication.objects.all(),label="Business Application",  )
     name = forms.CharField()
 
     def clean(self):
@@ -61,12 +61,7 @@ class AddVariableForm(forms.Form):
     variable = forms.ModelChoiceField(queryset=Variable.objects.all(), label="Variable")
 
 class AddRoleForm(forms.Form):
-    roles = Role.objects.all()
-    choices = []
-    for role in roles:
-        choices.append((role.id,role.name))
-
-    name = forms.ChoiceField(choices=choices, label="Role")
+    role = forms.ModelChoiceField(queryset=Role.objects.all(), label="Role", empty_label=None)
 
 
 

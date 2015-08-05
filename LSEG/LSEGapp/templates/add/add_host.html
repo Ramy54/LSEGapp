@@ -35,8 +35,8 @@
                 {% for form in formset.forms %}
                     {{ form.non_field_errors }}
                     <div class= "role_formset"  style="padding-bottom:6px; border-bottom:1px dotted #ccc; margin-bottom:6px;">
-                        <strong>{{ form.name.label }} : </strong>
-                        {{ form.name }}
+                        <strong>{{ form.role.label }} : </strong>
+                        {{ form.role }}
                     </div>
                 {% endfor %}
             </div>
