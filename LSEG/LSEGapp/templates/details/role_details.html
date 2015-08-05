@@ -1,9 +1,6 @@
 {% extends "skeleton.html" %}
 {% load static %}
 
-{% block extrahead %}
-    <script type="text/javascript" src={% static 'js/my_js.js' %}> </script>
-{% endblock %}
 
 {% block content %}
 
@@ -43,8 +40,8 @@
                                 <td>
                                     <a class="variable" id="{{ component_variables.id }}">{{ component_variables.variable.default_value }}</a>
                                     {% else %}
-                                <td style="width: 100%">
-                                <a style="width: 100%;" class="variable" id="{{ component_variables.id }}">{{ component_variables.value }}</a>
+                                <td style="">
+                                <a style="" class="variable" id="{{ component_variables.id }}">{{ component_variables.value }}</a>
 
                             {% endif %}
                         <button title="Default is : {{component_variables.variable.default_value }}" style="float: right;" type="button" class="btn btn-xs btn-danger" id="{{ component_variables.id }}" name="old_value" >

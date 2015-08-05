@@ -9,7 +9,7 @@ $(function() {
         var component_var_id = element.id;
         var old_value = $(".variable[id='" + component_var_id + "']").text();
 
-        $(element).html('<input style="width:100%" class="val_input" type="text" value="' + old_value + '" />');
+        $(element).html('<input style="width:85%" class="val_input" type="text" value="' + old_value + '" />');
 
         $(".val_input")
             .focus()
