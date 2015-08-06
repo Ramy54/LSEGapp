@@ -30,7 +30,7 @@ class BusinessApplication(models.Model):
 # Host Class 
 class Host(models.Model):
     name = models.CharField(max_length=50, unique=True)
-    environment = models.ForeignKey(Environment)
+    environment = models.ForeignKey(Environment, on_delete=models.PROTECT)
 
     class Meta:
         verbose_name = '03- Host'
@@ -39,18 +39,6 @@ class Host(models.Model):
     def __str__(self):
         return self.name
 
-
-# HostBusinessApplication Class
-class HostBusinessApplication(models.Model):
-    host = models.ForeignKey(Host)
-    business_application = models.ForeignKey(BusinessApplication)
-
-    class Meta:
-        verbose_name = '04- Host Business Application'
-        verbose_name_plural = '04 - Host Business Applications'
-
-    def __str__(self):
-        return self.host.name + '-' + self.business_application.name
 
 
 # Role Class
@@ -109,7 +97,7 @@ class Variable(models.Model):
 # Host Role Class
 class HostRole(models.Model):
     host = models.ForeignKey(Host)
-    role = models.ForeignKey(Role)
+    role = models.ForeignKey(Role, on_delete=models.PROTECT)
 
     class Meta:
         verbose_name = '08- Host Role'
@@ -122,7 +110,7 @@ class HostRole(models.Model):
 # Role Components Template Class
 class RoleComponentsTemplate(models.Model):
     role = models.ForeignKey(Role)
-    component = models.ForeignKey(Component)
+    component = models.ForeignKey(Component, on_delete=models.PROTECT)
 
     class Meta:
         verbose_name = '09- Role Components Template'
@@ -135,7 +123,7 @@ class RoleComponentsTemplate(models.Model):
 # Component Variables Template Class
 class ComponentVariablesTemplate(models.Model):
     component = models.ForeignKey(Component)
-    variable = models.ForeignKey(Variable)
+    variable = models.ForeignKey(Variable, on_delete=models.PROTECT)
 
     class Meta:
         verbose_name = '10- Component Variables Template'
@@ -175,3 +163,9 @@ class ComponentVariableList:
     def __init__(self,role_component,variable_list):
         self.role_component = role_component
         self.variable_list = variable_list
+
+
+class VariableUsed:
+    def __init__(self,variable,used):
+        self.variable = variable
+        self.used = used

@@ -8,7 +8,7 @@ from django.forms.formsets import *
 from django.db import IntegrityError
 from django import forms
 from django.forms.utils import ErrorList
-
+from django.contrib import messages
 
 # MAIN PAGES VIEWS
 
@@ -37,7 +37,12 @@ def skeleton(request):
 
 
 # TEMPLATE VIEWS
-def role_template(request):
+def role_template(request,delete_message=0):
+    if delete_message == "1":
+        message = "The role has been deleted"
+    if delete_message == "2":
+        message = "The role is used you can't delete it"
+
     ComponentFormset = formset_factory(AddComponentForm)
     roles_components = RoleComponentsTemplate.objects.all()
 
@@ -66,7 +71,13 @@ def role_template(request):
         formset = ComponentFormset()
     return render(request, 'template/role_template.html',locals())
 
-def component_template(request):
+def component_template(request, delete_message='0'):
+    if delete_message=='1':
+        message = "The component has been deleted"
+
+    if delete_message=='2':
+        message = "This component is used. You can't delete it."
+
     VariableFormset = formsets.formset_factory(AddVariableForm, can_delete=True)
     components_variables = ComponentVariablesTemplate.objects.all()
 
@@ -90,8 +101,14 @@ def component_template(request):
 
     return render(request, 'template/component_template.html',locals())
 
-def variables(request):
+def variables(request,delete_message=0):
     variables = Variable.objects.all()  #The variables to be given to the template
+
+    if (delete_message == '1'):
+        message = "Variable deleted."
+
+    if (delete_message == '2'):
+        message = "This variable is used. Please clear all dependencies."
 
     if request.method == 'POST':
         form = VariableForm(request.POST)
@@ -102,6 +119,7 @@ def variables(request):
             required = form.cleaned_data['required']
             description = form.cleaned_data['description']
 
+            new_var = Variable(name=name,default_value=default_value,type=type,required=required,description=description)
             new_var = Variable(name=name,default_value=default_value,type=type,required=required,description=description)
             new_var.save()
     else:
@@ -127,13 +145,12 @@ def add_host(request,id_env):
                 business_application = form2.cleaned_data['business_application']
                 host = Host(name=name, environment=environment)
                 host.save()                         #Add a host
-                host_business_application = HostBusinessApplication(business_application=business_application,host=host)
-                host_business_application.save()    #Add a host_business_app
 
                 roles_id = []
-                for form in formset:
-                    if form.is_valid:
-                        role = form.cleaned_data['role']
+
+                if formset.is_valid:
+                    for form in formset:
+                        role = Role.objects.first()
                         id = [role.id]
                         roles_id = roles_id + id
 
@@ -174,13 +191,11 @@ def add_role(request,id_host):
 
 # EDIT VIEWS
 def edit_host(request,id_host):
-    RoleFormset = formset_factory(AddRoleForm,extra=0)
     host = Host.objects.get(id=id_host)
     environment = host.environment
-    host_business_application = HostBusinessApplication.objects.get(host=host)
     host_roles = HostRole.objects.filter(host=host)
     list_of_roles = HostRole.objects.filter(host=host).values('role')
-
+    RoleFormset = formset_factory(AddRoleForm,extra=0)
     if request.method == 'POST':
         form2 = EnvironmentForm2(request.POST)
         form3 = HostForm( request.POST, auto_id=True )
@@ -189,27 +204,29 @@ def edit_host(request,id_host):
         if form2.is_valid():
             environment = form2.cleaned_data['environment']
             host.environment = environment
+        if formset.is_valid():
+            roles_id = []
+            for form in formset:
+                role = form.cleaned_data['role']
+                id = [role.id]
+                roles_id = roles_id + id
+            save_roles(host,roles_id)
+        try:
             if form3.is_valid():
                 name = form3.cleaned_data['name']
                 host.name = name
                 host.save()
-                business_application = form3.cleaned_data['business_application']
-                host_business_application.business_application = business_application
-                host_business_application.save()
-                if formset.is_valid():
-                    roles_id = []
-                    for form in formset:
-                        role = form.cleaned_data['role']
-                        id = [role.id]
-                        roles_id = roles_id + id
+            business_application = form3.cleaned_data['business_application']
 
-                    save_roles(host,roles_id)
+            return redirect(host_details_2,id_host=id_host)
 
-                return redirect(host_details_2,id_host=id_host)
+        except IntegrityError:
+            errors = form3._errors.setdefault("name", ErrorList())
+            errors.append(u"This host already exists")
 
     else:
         form2 = EnvironmentForm2(initial={'environment': environment})
-        form3 = HostForm(initial={'name':host.name,'business_application':host_business_application.business_application})
+        form3 = HostForm(initial={'name':host.name,})
         formset = RoleFormset(initial=list_of_roles)
 
     return render(request, 'edit/edit_host.html', locals())
@@ -357,28 +374,44 @@ def edit_value(request):
 
 
 
-
-
 # DELETE METHODS/VIEWS
 def delete_host(request,id_host):
     host = Host.objects.get(id=id_host)
+    HostRole.objects.filter(host=host).delete()
     host.delete()
     return redirect(index)
 
 def delete_role_template(request,id):
-    role = Role.objects.get(id=id)
-    role.delete()
-    return redirect(role_template)
+    try:
+        role = Role.objects.get(id=id)
+        role.delete()
+
+        RoleComponentsTemplate.objects.filter(role=role).delete()
+
+        return redirect(role_template,delete_message=1)
+
+    except models.ProtectedError:
+        return redirect(role_template,delete_message=2)
 
 def delete_component_template(request,id):
-    component = Component.objects.get(id=id)
-    component.delete()
-    return redirect(component_template)
+    try:
+        component = Component.objects.get(id=id)
+        component.delete()
+
+        ComponentVariablesTemplate.objects.filter(component=component).delete()
+        return redirect(component_template,delete_message=1)
+
+    except models.ProtectedError :
+        return redirect(component_template, delete_message=2)
 
 def delete_variable(request,id):
-    var = Variable.objects.get(id=id)
-    var.delete()
-    return redirect(variables)
+    try:
+        var = Variable.objects.get(id=id)
+        var.delete()
+        return redirect(variables, 1)
+
+    except models.ProtectedError :
+        return redirect(variables, 2)
 
 def delete_role(request,id_host,id_host_role):
     host = Host.objects.get(id=id_host)

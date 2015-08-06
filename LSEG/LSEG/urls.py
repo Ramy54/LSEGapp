@@ -29,8 +29,11 @@ urlpatterns = patterns('LSEGapp.views',
 
                        #TEMPLATE URLS
                        url(r'^role_template$', 'role_template'),
+                       url(r'^role_template/(?P<delete_message>[0-2])$', 'role_template'),
                        url(r'component_template$', 'component_template'),
+                       url(r'component_template/(?P<delete_message>[0-2])$', 'component_template'),
                        url(r'variables$', 'variables'),
+                       url(r'variables/(?P<delete_message>[0-2])$', 'variables'),
 
 
                        #DETAILS URLS
@@ -60,7 +63,7 @@ urlpatterns = patterns('LSEGapp.views',
                        url(r'^delete_host/(?P<id_host>\d+)$','delete_host'),
                        url(r'^role_template_delete/(?P<id>\d+)$', 'delete_role_template'),
                        url(r'^component_template_delete/(?P<id>\d+)$', 'delete_component_template'),
-                       url(r'^variables/(?P<id>\d+)$','delete_variable'),
+                       url(r'^delete_variable/(?P<id>\d+)$','delete_variable'),
                        url(r'^role_delete/(?P<id_host>\d+)/(?P<id_host_role>\d+)$', 'delete_role'),
                        url(r'^component_delete/(?P<id_host>\d+)/(?P<id_role>\d+)/(?P<id_component>\d+)$', 'delete_component'),
 

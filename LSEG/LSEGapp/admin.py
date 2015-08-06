@@ -13,10 +13,10 @@ class HostAdmin(admin.ModelAdmin):
     list_filter = ('environment',)
     ordering = ('environment', 'name')
 
-class HostBusinessApplicationAdmin(admin.ModelAdmin):
-    list_display = ('host', 'business_application')
+class RoleBusinessApplicationAdmin(admin.ModelAdmin):
+    list_display = ('role', 'business_application')
     list_filter = ('business_application',)
-    ordering = ('business_application', 'host')
+    ordering = ('business_application', 'role')
 
 class RoleAdmin(admin.ModelAdmin):
     list_display = ('name',)
@@ -60,7 +60,7 @@ class ComponentVariablesAdmin(admin.ModelAdmin):
 admin.site.register(Environment, EnvironmentAdmin)
 admin.site.register(BusinessApplication,BusinessApplicationAdmin)
 admin.site.register(Host,HostAdmin)
-admin.site.register(HostBusinessApplication,HostBusinessApplicationAdmin)
+admin.site.register(RoleBusinessApplication,RoleBusinessApplicationAdmin)
 admin.site.register(Role,RoleAdmin)
 admin.site.register(Component,ComponentAdmin)
 admin.site.register(Variable,VariableAdmin)

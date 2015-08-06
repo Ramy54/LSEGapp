@@ -4,6 +4,10 @@
 
 
 $(function() {
+
+    var variable_id =
+
+
     $(".variable").dblclick(function () {
         var element = this;
         var component_var_id = element.id;
@@ -81,6 +85,10 @@ $(function() {
                 }
 
             })
+    });
+
+    $(".delete_fade_out").fadeOut(3000,function(){
+
     });
 
 

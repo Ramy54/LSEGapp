@@ -27,7 +27,7 @@
         <h2>Add a component </h2>
     </div>
 
-    <form method="post" action="">
+    <form method="post" action="{% url "LSEGapp.views.component_template" %}">
         {% csrf_token %}
 
         <div style="margin-bottom: 10px">
@@ -56,6 +56,7 @@
 
     <div class="page-header">
         <h3>Existing Components</h3>
+        <span style="display: inline-block; color: red;" class="delete_fade_out">{{ message }}</span>
     </div>
     <div class="row">
         <div class="col-md-8">
