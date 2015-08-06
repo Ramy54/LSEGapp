@@ -27,16 +27,6 @@ class RoleForm(forms.Form):
     business_application = forms.ModelChoiceField(queryset=BusinessApplication.objects.all(),label="Business Application",  )
     name = forms.CharField()
 
-    def clean(self):
-        cleaned_data = self.cleaned_data
-        name = cleaned_data['name']
-
-        if Role.objects.filter(name=name).exists():
-            raise forms.ValidationError("This role already exist")
-
-        return cleaned_data
-
-
 
 # TO ADD A COMPONENT TEMPLATE
 class ComponentForm(forms.Form):
@@ -58,7 +48,7 @@ class AddComponentForm(forms.Form):
     component = forms.ModelChoiceField(queryset=Component.objects.all(), label="Component")
 
 class AddVariableForm(forms.Form):
-    variable = forms.ModelChoiceField(queryset=Variable.objects.all(), label="Variable")
+    variable = forms.ModelChoiceField(queryset=Variable.objects.all(), label="Variable",required=True)
 
 class AddRoleForm(forms.Form):
     role = forms.ModelChoiceField(queryset=Role.objects.all(), label="Role", empty_label=None)

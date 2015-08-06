@@ -25,7 +25,10 @@
             </thead>
             <tbody>
             <tr>
-                <td>{{ form.name }}</td>
+                <td>{{ form.name }}
+                <span style="display: inline-block; color: red;">{{ form.name.errors }}</span>
+                </td>
+
                 <td>{{ form.type }}</td>
                 <td>{{ form.default_value }}</td>
                 <td>{{ form.required }}</td>

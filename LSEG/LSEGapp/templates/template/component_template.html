@@ -2,17 +2,13 @@
 
 {% load static %}
 
-{% block extrahead %}
-    <script type="text/javascript">
-        $(function() {
-            $('.variable_formset').formset({
-                extraClasses: ['row1']
-            })
-        })
-    </script>
-    <!-- Here's an example of how you can style add/delete buttons with CSS -->
-    <link rel="stylesheet" href="{% static 'css/formset.css' %}" />
+{% block customized_javascript %}
+    <script type="text/javascript" src="{% static 'js/role_template.js' %}"></script>
+{% endblock %}
 
+{% block extrahead %}
+    <!-- CSS for formset rendering -->
+    <link rel="stylesheet" href="{% static 'css/formset.css' %}" />
 {% endblock %}
 
 {% block nav %}
@@ -29,17 +25,18 @@
 
     <form method="post" action="{% url "LSEGapp.views.component_template" %}">
         {% csrf_token %}
-
         <div style="margin-bottom: 10px">
             <br> <strong> {{ form2.name.label }} :</strong>  {{ form2.name }}
+            <span style="display: inline-block; color: red;">{{form2.name.errors }}</span>
         </div>
 
         <div class="">
             <div style="display: inline-block;" >
                 {% for form in formset.forms %}
-                    <div class= "variable_formset"  style="padding-bottom:6px; border-bottom:1px dotted #ccc; margin-bottom:6px;">
+                    <div class= "formset"  style="padding-bottom:6px; border-bottom:1px dotted #ccc; margin-bottom:6px;">
                         <strong>{{ form.variable.label}} : </strong>
                         {{ form.variable }}
+                        <span style="display: inline-block; color: red;">{{form.variable.errors }}</span>
                     </div>
                 {% endfor %}
             </div>
