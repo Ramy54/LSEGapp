@@ -11,6 +11,7 @@ $(function(){
 
     $('#id_business_application').change(function(){
         var business_app = $(this).find(":selected").text(); // value of the selected business application in the dropdown
+        prefix =''
 
         $.ajax({
             url: "/autocompletion_role_name",
@@ -20,18 +21,25 @@ $(function(){
             },
             dataType: "json",
             success: function(data) {
+                prefix = data.prefix
                 $('#id_name')
-                    .val(data.prefix)
+                    .val(prefix)
                     .keyup(function(){
-                        var prefix = data.prefix;
                         if (!(this.value.match('^' + prefix + ''))){
                             this.value = '' + prefix;
                         }
                     });
             }
 
-        })
+
+
+        });
+
+
+
     });
+
+
 
     $(".delete_fade_out").fadeOut(3000,function(){
 

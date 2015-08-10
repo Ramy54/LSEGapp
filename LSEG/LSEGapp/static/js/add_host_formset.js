@@ -58,6 +58,9 @@
                     row.append('<a class="' + options.deleteCssClass + '" href="javascript:void(0)">' + options.deleteText +'</a>');
                 }
                 row.find('a.' + options.deleteCssClass).click(function() {
+                    forms = $('.' + options.formCssClass).not(':hidden');
+                    pre_deletion_function(forms)
+
                     var row = $(this).parents('.' + options.formCssClass),
                         del = row.find('input:hidden[id $= "-DELETE"]'),
                         buttonRow = row.siblings("a." + options.addCssClass + ', .' + options.formCssClass + '-add'),
@@ -184,13 +187,46 @@
                 // Check if we've exceeded the maximum allowed number of forms:
                 if (!showAddButton()) buttonRow.hide();
                 // If a post-add callback was supplied, call it with the added form:
-                if (options.added) options.added(row);
+                if (options.added) options.added(formCount);
                 return false;
             });
         }
 
         return $$;
     };
+
+    function add_custom_function(formCount){   //totalForms = number of forms after adding the form
+
+        var data = {};
+        $('#id_form-' + (formCount -1) + '-role > option:not(:selected)').each(function(){
+            role_id = $(this).val();
+            role_name = $(this).text();
+            data[role_id] = role_name;
+        });
+        $('#id_form-' + formCount + '-role').empty();
+        $.each(data, function(key, value){
+            $('#id_form-' + formCount + '-role').append('<option value="' + key + '">' + value +'</option>');
+        });
+
+        if (Object.keys(data).length == 1){
+            $('.add-row').hide()
+        }
+
+
+    }
+
+    function delete_custom_function(){
+    }
+
+    function pre_deletion_function(forms){
+        if (forms.length == 1) {
+            $('.formset').hide();
+            $('#id_business_application')
+                .attr('disabled',false)
+                .val("");
+            $('#add_host').attr('disabled',true)
+        }
+    }
 
     /* Setup plugin defaults */
     $.fn.formset.defaults = {
@@ -203,7 +239,10 @@
         formCssClass: 'dynamic-form',    // CSS class applied to each form in a formset
         extraClasses: [],                // Additional CSS classes, which will be applied to each form in turn
         keepFieldValues: '',             // jQuery selector for fields whose values should be kept when the form is cloned
-        added: null,                     // Function called each time a new form is added
-        removed: null                    // Function called each time a form is deleted
+        added: add_custom_function ,                     // Function called each time a new form is added
+        removed: delete_custom_function                    // Function called each time a form is deleted
     };
-})(jQuery)
+
+})
+
+(jQuery)

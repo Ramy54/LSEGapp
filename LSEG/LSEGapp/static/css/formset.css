@@ -23,3 +23,8 @@ th {
 .component_table{
     color: darkgoldenrod;
 }
+
+select:disabled {
+    background-color: rgb(235, 235, 228);
+    color: rgb(84,84,84);
+}

@@ -4,17 +4,18 @@
 
 {% block customized_javascript %}
     <script type="text/javascript" src="{% static 'js/add_host.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/add_host_formset.js' %}"></script>
 {% endblock %}
 
 {% block extrahead %}
+    <!-- CSS for formset rendering -->
     <link rel="stylesheet" href="{% static 'css/formset.css' %}" />
 {% endblock %}
 
 
 {% block content %}
-    <div class="page-geader" style="margin-bottom: 20px">
+    <div class="page-header" style="margin-bottom: 20px">
         <h3>You are adding a host to <strong>{{ environment }}</strong> environment</h3>
-
     </div>
 
 
@@ -29,8 +30,8 @@
 
         </div>
 
-        <div class="">
-            <div style="display: inline-block;" >
+        <div >
+            <div style="display: inline-block;"  class="formset" id="formset">
 
                 {% for form in formset.forms %}
                     {{ form.non_field_errors }}
@@ -42,7 +43,7 @@
             </div>
             <p>
                 {{ formset.management_form }}
-                <input type="submit" class="btn btn-s btn-success" value="Add role" style=""/>
+            <input type="submit" class="btn btn-s btn-success" value="Add host" style="margin-top: 20px" disabled id="add_host"/>
             </p>
         </div>
 

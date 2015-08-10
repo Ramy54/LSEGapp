@@ -173,7 +173,7 @@ def add_host(request, id_env):
         form2 = HostForm()
         formset = RoleFormset()
 
-    return render(request, 'add/add_host.html', locals(), context_instance=RequestContext(request))
+    return render(request, 'add/add_host.html', locals())
 
 
 def save_roles(host, roles_id):
@@ -570,14 +570,14 @@ def save_file(request, id_host):
 def role_filter(request):
     if request.is_ajax:
         business_app = request.POST['business_app']
-        if business_app != "All":
+        if business_app != "--SELECT--":
             ba = BusinessApplication.objects.get(name=business_app)
             roles_ba = RoleBusinessApplication.objects.filter(business_application=ba).order_by('role')
             roles = []
             for role_ba in roles_ba:
                 roles = roles + [role_ba.role]
         else:
-            roles = Role.objects.all().order_by('name')
+            roles = []
         data = {}
         for role in roles:
             data[role.id] = role.name
