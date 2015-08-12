@@ -22,15 +22,17 @@
     <form id="myForm" method="post" action="" >
         {% csrf_token %}
 
-        <div style="margin-bottom: 10px">
+        <div>
             <br> <strong> {{ form2.name.label }} :</strong>  {{ form2.name }}
             <span style="display: inline-block; color: red;">{{ form2.name.errors }}</span> <!-- Errors generated in red if the form is not valid -->
+        </div>
+        <div>
             <br> <strong> {{ form2.business_application.label }} :</strong>  {{ form2.business_application }}
             <span style="display: inline-block; color: red;">{{ form2.business_application.errors }}</span> <!-- Errors generated in red if the form is not valid -->
-
         </div>
 
-        <div >
+
+        <div style="margin-top: 20px">
             <div style="display: inline-block;"  class="formset" id="formset">
 
                 {% for form in formset.forms %}
@@ -43,7 +45,7 @@
             </div>
             <p>
                 {{ formset.management_form }}
-            <input type="submit" class="btn btn-s btn-success" value="Add host" style="margin-top: 20px" disabled id="add_host"/>
+                <input type="submit" class="btn btn-s btn-success" value="Add host" style="margin-top: 20px" disabled id="add_host"/>
             </p>
         </div>
 

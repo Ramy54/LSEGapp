@@ -76,7 +76,7 @@
                             <button type="button" class="btn btn-xs btn-info" onclick="location.href='{% url "LSEGapp.views.edit_role_template" role.grouper.id  %}';">
                                 <span   class="glyphicon glyphicon-edit"></span>
                             </button>
-                            <button type="button" class="btn btn-xs btn-danger" onclick="location.href='{% url "LSEGapp.views.delete_role_template" role.grouper.id %}'">
+                            <button type="button" class="btn btn-xs btn-danger"  name= "delete_button" onclick="location.href='{% url "LSEGapp.views.delete_role_template" role.grouper.id %}'" >
                                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                             </button>
                         </td>

@@ -39,10 +39,6 @@ $(function(){
 
     });
 
-
-
-    $(".delete_fade_out").fadeOut(3000,function(){
-
-    });
+    $(".delete_fade_out").fadeOut(3000)
 
 });
