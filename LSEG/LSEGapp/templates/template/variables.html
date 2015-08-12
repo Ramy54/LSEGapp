@@ -11,59 +11,18 @@
 
 {% block content %}
     <div class="page-header">
-        <h2>Add a variable</h2>
+        <h2>Variable Table </h2>
+        <span style="display: inline-block; color: red;" class="alert_red"></span>
+        <span style="display: inline-block; color: green;" class="alert_green"></span>
+
     </div>
 
 
-    <form action="{% url "LSEGapp.views.variables" %}" method="post">
-        {% csrf_token %}
-
-
-        <table class="table table-striped" style="margin-bottom: 5px">
-            <tr>
-                <th>{{ form.name.label }}</th>
-                <th>{{ form.type.label }} </th>
-                <th>{{ form.default_value.label }} </th>
-                <th>{{ form.required.label }}  </th>
-                <th>{{ form.description.label }} </th>
-            </tr>
-            <tbody>
-            <tr>
-                <td>
-                    {{ form.name }}
-                    <span style="display: inline-block; color: red;">{{form.name.errors }}</span>
-                </td>
-                <td>
-                    {{ form.type }}
-                    <span style="display: inline-block; color: red;">{{form.type.errors }}</span>
-                </td>
-                <td>
-                    {{ form.default_value }}
-                    <span style="display: inline-block; color: red;">{{form.default_value.errors }}</span>
-                </td>
-                <td>
-                    {{ form.required }}
-                    <span style="display: inline-block; color: red;">{{form.required.errors }}</span>
-                </td>
-                <td>
-                    {{ form.description }}
-                    <span style="display: inline-block; color: red;">{{form.description.errors }}</span>
-                </td>
-            </tr>
-
-            </tbody>
-        </table>
-        <input type="submit" class="btn btn-s btn-success" value="Add variable" style="float: right"/>
-    </form>
-
+    <div id="jsGrid"></div>
 
     <div class="page-header" style="margin-top: 75px">
-        <h3>Existing Variables</h3>
-        <span style="display: inline-block; color: red;" class="delete_fade"></span>
 
-
-
-    <div id="jsGrid"></div>
+    </div>
 
 
 

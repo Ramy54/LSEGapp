@@ -1,7 +1,3 @@
-/**
- * Created by ramyah on 29/07/2015.
- */
-
 
 $(function() {
 
@@ -87,74 +83,126 @@ $(function() {
             })
     });
 
+    $(".delete_fade_out").fadeOut(3000,function(){
 
-    $('#variable_table').hide();
+    });
+
 
 
 
     $("#jsGrid").jsGrid({
-        width: '100%',
 
-        paging: false,
-        autoload: true,
+        width: "100%",
+        pageSize: 15,
+        pageButtonCount: 5,
+        filtering:true,
+        inserting:true,
+        autoload:true,
         editing: true,
-        filtering: true,
-        deleteConfirm: "Do you really want to delete the variable?",
-        onItemDeleting : function(grid){
-            insertItem(grid.item)
+
+        onItemDeleting: function(grid){
+            var deferred = $.Deferred();
+
+            $.ajax({
+                url: '/is_var_used',
+                type: "POST",
+                dataType: 'json',
+                data: {'id':grid.item.id},
+                success: function(data){
+                    alert(data.boolean)
+                    deferred.resolve(data.boolean);
+                }
+            });
+
+            return deferred.promise();
         },
 
 
-        controller: {
-            loadData: function(){
+
+        fields: [
+            { name: "name", title: "Name", type: "text", align: "center"},
+            { name: "type", title: "Type", type: "text", align: "center"},
+            { name: "default_value", title: "Default Value", type: "text", align: "center", filtering:false},
+            { name: "required", title: "Required", type: "checkbox", align: "center", filtering: false},
+            { name: "description", title: "Description", type: "text", align: "center", filtering:false },
+            { type: "control"}
+        ],
+
+        controller:{
+            loadData: function(filter) {
+                name_filter = filter.name;
+                type_filter = filter.type;
                 var deferred = $.Deferred();
 
                 $.ajax({
                     url: '/get_vars',
                     type: "POST",
                     dataType: 'json',
-                    success: function(data) {
-                        deferred.resolve(data.variable)
+                    data: {"name_filter":name_filter, "type_filter":type_filter},
+                    success: function(data){
+                        deferred.resolve(data.variable);
                     }
-
                 });
-                return deferred.promise()
+
+                return deferred.promise();
             },
 
-            deleteItem: function(item){
-                var var_name = item.Name;
+            insertItem: function(item) {
+                var name = item.name;
+                var type = item.type;
+                var default_value = item.default_value;
+                var required = item.required;
+                var description = item.description;
 
                 $.ajax({
-                    url: "/delete_variable",
                     type: "POST",
-                    data: {'var_name':var_name},
+                    url: "/add_variable",
+                    data: {"name":name, "type":type, "default_value":default_value, "required" :required, "description": description},
+                    dataType: "json",
                     success: function(data){
-                        $('.delete_fade')
-                            .text(data.message)
-                            .fadeOut(3000)
+                        if (data.error_mesage){
+                            $('.alert_red').text(data.error_mesage).fadeOut(3000)
+                        }
+                        else{
+                            $('.alert_green').text(data.add_message).fadeOut(3000)
+                        }
+
                     }
                 });
+            },
 
+            updateItem: function(item) {
+                var id = item.id;
+                var name = item.name;
+                var type = item.type;
+                var default_value = item.default_value;
+                var required = item.required;
+                var description = item.description;
+                $.ajax({
+                    type: "POST",
+                    url: "/update_variable",
+                    data: {"id":id, "name":name, "type":type, "default_value":default_value, "required" :required, "description": description},
+                    dataType: "json"
+                });
 
+            },
+
+            deleteItem: function(item) {
+                var var_name = item.name;
+
+                return $.ajax({
+                    type: "POST",
+                    url: "/delete_variable",
+                    dataType: "json",
+                    data: {'var_name':var_name},
+                    success: function(data){
+                        $('.alert_red').text(data.message).fadeOut(3000)
+                    }
+
+                });
             }
+        }
 
-        },
-
-        fields: [
-            { name: "Name", type: "text", align: "center"},
-            { name: "Type", type: "text", align: "center"},
-            { name: "Default Value", type: "text", align: "center"},
-            { name: "Required", type: "text", align: "center"},
-            { name: "Description", type: "text", align: "center"},
-            { type: "control",headerTemplate: function() {
-                return $("<button>").attr("type", "button").text("Add")
-                    .on("click", function () {
-                        showDetailsDialog("Add", {});
-                    });
-            }
-            }
-
-        ]
     });
 
 

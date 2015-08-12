@@ -434,15 +434,19 @@ def delete_component_template(request, id):
 
 def delete_variable(request):
     if request.is_ajax:
-        try:
-            var_name = request.POST['var_name']
-            var = Variable.objects.get(name=var_name)
+        var_name = request.POST['var_name']
+        var = Variable.objects.get(name=var_name)
+        compo_vars = ComponentVariablesTemplate.objects.filter(variable=var)
+        if not(compo_vars.exists()):
+            message = 'The variable ' + var.name + ' has been deleted.'
             var.delete()
+            boolean = True
+            return JsonResponse({'message': message,'boolean': boolean})
 
-            return HttpResponse('Success')
-
-        except models.ProtectedError:
-            return JsonResponse({'message':'Sorry this variable is used'})
+        else:
+            boolean=False
+            message = "The variable" + var.name + "can't be deleted"
+            return JsonResponse({'message':message, 'boolean': boolean})
     else:
         return HttpResponse('You Failled')
 
@@ -593,15 +597,86 @@ def role_filter(request):
 
 def get_vars(request):
     if request.is_ajax:
+        name_filter = request.POST['name_filter']
+        type_filter = request.POST['type_filter']
         variables = Variable.objects.all()
+        if name_filter != "":
+            variables = variables.filter(name__contains=name_filter)
+        if type_filter != "":
+            variables = variables.filter(type__contains=type_filter)
+
         dict = {}
         variable_list = []
         for variable in variables:
-            record = {'Name': variable.name, 'Type': variable.type, 'Default Value': variable.default_value, 'Required':variable.required, 'Description': variable.description}
+            record = {'id': variable.id, 'name': variable.name, 'type': variable.type, 'default_value': variable.default_value, 'required':variable.required, 'description': variable.description}
             variable_list.append(record)
 
         dict['variable'] = variable_list
         return JsonResponse(dict)
     else:
         return HttpResponse("You failled")
+
+
+def add_variable(request):
+    if request.is_ajax:
+        name = request.POST['name']
+        type = request.POST['type']
+        default_value = request.POST['default_value']
+        required = request.POST['required']
+        if required == "false":
+            required = False
+        else:
+            required = True
+        description = request.POST['description']
+        try:
+            Variable(name=name,type=type,default_value=default_value,required=required,description=description).save()
+            add_message = "The variable " + name + " has been added successfully "
+            return JsonResponse({"add_message": add_message})
+        except IntegrityError:
+            error_message = "The variable " + name + " already exists "
+            return JsonResponse({"error_message":error_message})
+    else:
+        return HttpResponse("Fail")
+
+
+def update_variable(request):
+    if request.is_ajax:
+        id = request.POST['id']
+        name = request.POST['name']
+        type = request.POST['type']
+        default_value = request.POST['default_value']
+        required = request.POST['required']
+        if required == "false":
+            required = False
+        else:
+            required = True
+        description = request.POST['description']
+
+        variable = Variable.objects.get(id=id)
+        variable.name = name
+        variable.type = type
+        variable.default_value = default_value
+        variable.required = required
+        variable.description = description
+        variable.save()
+
+        return JsonResponse({})
+    else:
+        return HttpResponse('Faillure')
+
+
+def is_var_used(request):
+    if request.is_ajax:
+        id = request.POST['id']
+        var = Variable.objects.get(id=id)
+        compo_vars = ComponentVariablesTemplate.objects.filter(variable=var)
+        if not(compo_vars.exists()):
+            used = False
+            return JsonResponse({'boolean': used})
+
+        else:
+            used = True
+            return JsonResponse({'boolean': used})
+    else:
+        return HttpResponse('You Failled')
 
