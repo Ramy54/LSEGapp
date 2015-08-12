@@ -126,9 +126,10 @@ def add_host(request, id_env):
 
                 roles_id = []
 
-                if formset.is_valid:
-                    for form in formset:
-                        role = Role.objects.first()
+                for form in formset:
+                    if form.is_valid():
+                        role_name = form.cleaned_data['role']
+                        role = Role.objects.get(name=role_name)
                         id = [role.id]
                         roles_id = roles_id + id
 
@@ -175,7 +176,7 @@ def edit_host(request, id_host):
     environment = host.environment
     host_roles = HostRole.objects.filter(host=host)
     list_of_roles = HostRole.objects.filter(host=host).values('role')
-    RoleFormset = formset_factory(AddRoleForm, extra=0)
+    RoleFormset = formset_factory(AddRoleForm)
     if request.method == 'POST':
         form2 = EnvironmentForm2(request.POST)
         form3 = HostForm(request.POST, auto_id=True)
