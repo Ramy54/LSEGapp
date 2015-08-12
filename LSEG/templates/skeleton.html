@@ -23,9 +23,18 @@
     <!-- Custom styles for this template -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
 
+    <!-- jsGrid CSS -->
+
+    <link type="text/css" rel="stylesheet" href={% static 'css/jsgrid.css' %} />
+    <link type="text/css" rel="stylesheet" href={% static 'css/jsgrid-theme.css' %} />
+
     <script type="text/javascript" src="/static/js/jquery-1.11.3.js"></script>
 
     <script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+
+    <script type="text/javascript" src={% static 'js/jsgrid.js' %}></script>
+
+
 
     {% block customized_javascript %}
         <script type="text/javascript" src="{% static 'js/jquery.formset.js' %}"></script>

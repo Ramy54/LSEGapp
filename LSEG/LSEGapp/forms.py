@@ -17,19 +17,19 @@ class EnvironmentForm2(forms.Form):
 
 
 class HostForm(forms.Form):
-    name = forms.CharField(required=True)
+    name = forms.CharField(required=True, widget=forms.TextInput(attrs={'autocomplete':'off'}))
     business_application = forms.ModelChoiceField(queryset=BusinessApplication.objects.all().order_by('name'),label="Business Application", empty_label="--SELECT--")
 
 
 # TO ADD A ROLE TEMPLATE
 class RoleForm(forms.Form):
     business_application = forms.ModelChoiceField(queryset=BusinessApplication.objects.all(),label="Business Application" )
-    name = forms.CharField()
+    name = forms.CharField(widget=forms.TextInput(attrs={'autocomplete':'off'}))
 
 
 # TO ADD A COMPONENT TEMPLATE
 class ComponentForm(forms.Form):
-    name = forms.CharField()
+    name = forms.CharField(widget=forms.TextInput(attrs={'autocomplete':'off'}))
 
 # TO ADD VARIABLES
 class VariableForm(forms.ModelForm):

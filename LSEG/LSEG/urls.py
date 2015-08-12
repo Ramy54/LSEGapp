@@ -63,7 +63,7 @@ urlpatterns = patterns('LSEGapp.views',
                        url(r'^delete_host/(?P<id_host>\d+)$','delete_host'),
                        url(r'^role_template_delete/(?P<id>\d+)$', 'delete_role_template'),
                        url(r'^component_template_delete/(?P<id>\d+)$', 'delete_component_template'),
-                       url(r'^delete_variable/(?P<id>\d+)$','delete_variable'),
+                       url(r'^delete_variable$','delete_variable'),
                        url(r'^role_delete/(?P<id_host>\d+)/(?P<id_host_role>\d+)$', 'delete_role'),
                        url(r'^component_delete/(?P<id_host>\d+)/(?P<id_role>\d+)/(?P<id_component>\d+)$', 'delete_component'),
 
@@ -72,6 +72,7 @@ urlpatterns = patterns('LSEGapp.views',
                        url(r'set_default$', 'set_default'),
                        url(r'autocompletion_role_name', 'autocompletion_role_name'),
                        url(r'role_filter', 'role_filter'),
+                       url(r'get_vars', 'get_vars'),
 
 
 

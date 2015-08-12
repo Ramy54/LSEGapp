@@ -432,14 +432,19 @@ def delete_component_template(request, id):
         return redirect(component_template, delete_message=2)
 
 
-def delete_variable(request, id):
-    try:
-        var = Variable.objects.get(id=id)
-        var.delete()
-        return redirect(variables, 1)
+def delete_variable(request):
+    if request.is_ajax:
+        try:
+            var_name = request.POST['var_name']
+            var = Variable.objects.get(name=var_name)
+            var.delete()
 
-    except models.ProtectedError:
-        return redirect(variables, 2)
+            return HttpResponse('Success')
+
+        except models.ProtectedError:
+            return JsonResponse({'message':'Sorry this variable is used'})
+    else:
+        return HttpResponse('You Failled')
 
 
 def delete_role(request, id_host, id_host_role):
@@ -584,3 +589,19 @@ def role_filter(request):
         return JsonResponse(data)
     else:
         return HttpResponse("Ramy you failed")
+
+
+def get_vars(request):
+    if request.is_ajax:
+        variables = Variable.objects.all()
+        dict = {}
+        variable_list = []
+        for variable in variables:
+            record = {'Name': variable.name, 'Type': variable.type, 'Default Value': variable.default_value, 'Required':variable.required, 'Description': variable.description}
+            variable_list.append(record)
+
+        dict['variable'] = variable_list
+        return JsonResponse(dict)
+    else:
+        return HttpResponse("You failled")
+

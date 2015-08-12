@@ -20,14 +20,13 @@
 
 
         <table class="table table-striped" style="margin-bottom: 5px">
-            <thead>
-
+            <tr>
                 <th>{{ form.name.label }}</th>
                 <th>{{ form.type.label }} </th>
                 <th>{{ form.default_value.label }} </th>
                 <th>{{ form.required.label }}  </th>
                 <th>{{ form.description.label }} </th>
-            </thead>
+            </tr>
             <tbody>
             <tr>
                 <td>
@@ -60,50 +59,14 @@
 
     <div class="page-header" style="margin-top: 75px">
         <h3>Existing Variables</h3>
-        <span style="display: inline-block; color: red;" class="delete_fade_out">{{ message }}</span>
+        <span style="display: inline-block; color: red;" class="delete_fade"></span>
 
 
-    </div>
-    <div class="row">
-        <div class="col-md-12">
 
-            <table class="table table-striped";>
-                <thead>
-                <tr>
-                    <th class="col-md-4">Name</th>
-                    <th class="col-md-1">Type</th>
-                    <th class="col-md-4">Default Value </th>
-                    <th class="col-md-1">Required</th>
-                    <th class="col-md-3">Description</th>
-                </tr>
-                </thead>
-                <tbody>
+    <div id="jsGrid"></div>
 
 
-                {% for variable in variables %}
-                    <tr>
-                        <td align="right">
-                            <span style="float: left"><strong>{{ variable.name }}</strong></span>
-                            <button type="button" class="btn btn-xs btn-info" onclick="location.href='{% url "LSEGapp.views.edit_variable" variable.id  %}';" style="alignment: right">
-                                <span   class="glyphicon glyphicon-edit"></span>
-                            </button>
-                            <button type="button" id="submit" class="btn btn-xs btn-danger" onclick="location.href='{% url "LSEGapp.views.delete_variable" variable.id %}'" style="alignment: right"  name="delete_variable">
-                                <span class="glyphicon glyphicon-trash" aria-hidden="true" ></span>
-                            </button>
-                        </td>
 
-                        <td>{{ variable.type }}</td>
-                        <td style="width: 60%"> <a  class="variable_template" id={{ variable.id }}>{{ variable.default_value }}</a></td>
-                        <td>{{ variable.required }}</td>
-                        <td>{{ variable.description }}</td>
-
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-
-        </div>
-    </div>
 
 
 
