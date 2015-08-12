@@ -531,22 +531,22 @@
                 this._renderCells($result, item);
             }
 
-           $result.addClass(this._getRowClasses(item, itemIndex))
-              .data(JSGRID_ROW_DATA_KEY, item)
-              .on("click", $.proxy(function(e) {
-                 this.rowClick({
-                    item: item,
-                    itemIndex: itemIndex,
-                    event: e
-                 });
-              }, this))
-              .on("dblclick", $.proxy(function(e) {
-                 this.rowDoubleClick({
-                    item: item,
-                    itemIndex: itemIndex,
-                    event: e
-                 });
-              }, this));
+            $result.addClass(this._getRowClasses(item, itemIndex))
+                .data(JSGRID_ROW_DATA_KEY, item)
+                .on("click", $.proxy(function(e) {
+                    this.rowClick({
+                        item: item,
+                        itemIndex: itemIndex,
+                        event: e
+                    });
+                }, this))
+                .on("dblclick", $.proxy(function(e) {
+                    this.rowDoubleClick({
+                        item: item,
+                        itemIndex: itemIndex,
+                        event: e
+                    });
+                }, this));
 
             if(this.selecting) {
                 this._attachRowHover($result);
@@ -968,18 +968,21 @@
         insertItem: function(item) {
             var insertingItem = item || this._getInsertItem();
 
-            this._callEventHandler(this.onItemInserting, {
+            var valid = this._callEventHandler(this.onItemInserting, {
                 item: insertingItem
             });
 
-            return this._controllerCall("insertItem", insertingItem, function(insertedItem) {
-                insertedItem = insertedItem || insertingItem;
-                this._loadStrategy.finishInsert(insertedItem);
+            if(valid){
+                return this._controllerCall("insertItem", insertingItem, function(insertedItem) {
+                    insertedItem = insertedItem || insertingItem;
+                    this._loadStrategy.finishInsert(insertedItem);
 
-                this._callEventHandler(this.onItemInserted, {
-                    item: insertedItem
+                    this._callEventHandler(this.onItemInserted, {
+                        item: insertedItem
+                    });
                 });
-            });
+            }
+
         },
 
         _getInsertItem: function() {
@@ -1067,24 +1070,27 @@
 
             $.extend(updatingItem, editedItem);
 
-            this._callEventHandler(this.onItemUpdating, {
+            var valid = this._callEventHandler(this.onItemUpdating, {
                 row: $updatingRow,
                 item: updatingItem,
                 itemIndex: updatingItemIndex,
                 previousItem: previousItem
             });
 
-            return this._controllerCall("updateItem", updatingItem, function(updatedItem) {
-                updatedItem = updatedItem || updatingItem;
-                this._finishUpdate($updatingRow, updatedItem, updatingItemIndex);
+            if (valid){
+                return this._controllerCall("updateItem", updatingItem, function(updatedItem) {
+                    updatedItem = updatedItem || updatingItem;
+                    this._finishUpdate($updatingRow, updatedItem, updatingItemIndex);
 
-                this._callEventHandler(this.onItemUpdated, {
-                    row: $updatingRow,
-                    item: updatedItem,
-                    itemIndex: updatingItemIndex,
-                    previousItem: previousItem
+                    this._callEventHandler(this.onItemUpdated, {
+                        row: $updatingRow,
+                        item: updatedItem,
+                        itemIndex: updatingItemIndex,
+                        previousItem: previousItem
+                    });
                 });
-            });
+            }
+
         },
 
         _itemIndex: function(item) {
@@ -1136,21 +1142,24 @@
             var deletingItem = $row.data(JSGRID_ROW_DATA_KEY),
                 deletingItemIndex = this._itemIndex(deletingItem);
 
-            this._callEventHandler(this.onItemDeleting, {
+            var used = this._callEventHandler(this.onItemDeleting, {
                 row: $row,
                 item: deletingItem,
                 itemIndex: deletingItemIndex
             });
 
-            return this._controllerCall("deleteItem", deletingItem, function() {
-                this._loadStrategy.finishDelete(deletingItem, deletingItemIndex);
+            if(!used){
+                return this._controllerCall("deleteItem", deletingItem, function() {
+                    this._loadStrategy.finishDelete(deletingItem, deletingItemIndex);
 
-                this._callEventHandler(this.onItemDeleted, {
-                    row: $row,
-                    item: deletingItem,
-                    itemIndex: deletingItemIndex
-                });
-            });
+                    this._callEventHandler(this.onItemDeleted, {
+                        row: $row,
+                        item: deletingItem,
+                        itemIndex: deletingItemIndex
+                    });
+                });}
+
+
         }
     };
 
@@ -1683,8 +1692,8 @@
 
             if(valueField) {
                 resultItem = $.grep(items, function(item, index) {
-                    return item[valueField] === value;
-                })[0] || {};
+                        return item[valueField] === value;
+                    })[0] || {};
             }
             else {
                 resultItem = items[value];

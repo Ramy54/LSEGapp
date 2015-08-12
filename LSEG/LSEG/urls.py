@@ -76,6 +76,9 @@ urlpatterns = patterns('LSEGapp.views',
                        url(r'role_filter$', 'role_filter'),
                        url(r'get_vars$', 'get_vars'),
                        url(r'is_var_used$', 'is_var_used'),
+                       url(r'is_var_valid$', 'is_var_valid'),
+                       url(r'is_var_valid2$', 'is_var_valid2'),
+
 
 
 

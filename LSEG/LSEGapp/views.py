@@ -628,13 +628,9 @@ def add_variable(request):
         else:
             required = True
         description = request.POST['description']
-        try:
-            Variable(name=name,type=type,default_value=default_value,required=required,description=description).save()
-            add_message = "The variable " + name + " has been added successfully "
-            return JsonResponse({"add_message": add_message})
-        except IntegrityError:
-            error_message = "The variable " + name + " already exists "
-            return JsonResponse({"error_message":error_message})
+        Variable(name=name,type=type,default_value=default_value,required=required,description=description).save()
+        add_message = "The variable " + name + " has been added successfully "
+        return HttpResponse('Success')
     else:
         return HttpResponse("Fail")
 
@@ -667,8 +663,8 @@ def update_variable(request):
 
 def is_var_used(request):
     if request.is_ajax:
-        id = request.POST['id']
-        var = Variable.objects.get(id=id)
+        name = request.POST['name']
+        var = Variable.objects.get(name=name)
         compo_vars = ComponentVariablesTemplate.objects.filter(variable=var)
         if not(compo_vars.exists()):
             used = False
@@ -676,7 +672,48 @@ def is_var_used(request):
 
         else:
             used = True
-            return JsonResponse({'boolean': used})
+            message = "The variable " + var.name + " is used"
+            return JsonResponse({'boolean': used, 'message':message})
+    else:
+        return HttpResponse('You Failled')
+
+
+def is_var_valid(request):
+    if request.is_ajax:
+        id = request.POST['id']
+        new_name = request.POST['new_name']
+        new_type = request.POST['new_type']
+        new_default_value = request.POST['new_default_value']
+
+        var = Variable.objects.get(id=id)
+        if (Variable.objects.filter(name=new_name).exists() and new_name != var.name) or new_type == "" or new_default_value== "":
+            valid = False
+            message = "The variable " + new_name + "  is not valid"
+            return JsonResponse({'boolean': False, 'message': message})
+
+        else:
+            valid = True
+
+            return JsonResponse({'boolean': True, 'message':''})
+    else:
+        return HttpResponse('You Failled')
+
+
+def is_var_valid2(request):
+    if request.is_ajax:
+        new_name = request.POST['new_name']
+        new_type = request.POST['new_type']
+        new_default_value = request.POST['new_default_value']
+
+        if Variable.objects.filter(name=new_name).exists() or new_type == "" or new_default_value == "":
+            valid = False
+            message = "The variable " + new_name + "  is not valid"
+            return JsonResponse({'boolean': False, 'message': message})
+
+        else:
+            valid = True
+
+            return JsonResponse({'boolean': True, 'message':''})
     else:
         return HttpResponse('You Failled')
 

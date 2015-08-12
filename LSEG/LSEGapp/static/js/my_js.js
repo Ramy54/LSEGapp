@@ -83,12 +83,6 @@ $(function() {
             })
     });
 
-    $(".delete_fade_out").fadeOut(3000,function(){
-
-    });
-
-
-
 
     $("#jsGrid").jsGrid({
 
@@ -100,21 +94,62 @@ $(function() {
         autoload:true,
         editing: true,
 
-        onItemDeleting: function(grid){
-            var deferred = $.Deferred();
-
+        onItemDeleting: function(grid){ //Return if a variable is used by other components
             $.ajax({
                 url: '/is_var_used',
                 type: "POST",
                 dataType: 'json',
-                data: {'id':grid.item.id},
+                async:false,
+                data: {'name':grid.item.name},
                 success: function(data){
-                    alert(data.boolean)
-                    deferred.resolve(data.boolean);
+                    used = data.boolean;
+                    message = data.message;
+                    $('.alert_red').text(message).show().fadeOut(3000)
                 }
             });
 
-            return deferred.promise();
+            return used
+
+        },
+
+        onItemUpdating: function(grid){
+            var new_name = grid.item.name;
+            var new_type = grid.item.type;
+            var new_default_value = grid.item.default_value;
+
+            $.ajax({
+                url: '/is_var_valid',
+                type: "POST",
+                dataType: 'json',
+                async:false,
+                data: {'id':grid.item.id,'new_name':new_name, "new_type":new_type, "new_default_value":new_default_value},
+                success: function(data){
+                    valid = data.boolean;
+                    message = data.message;
+                    $('.alert_red').text(message).show().fadeOut(3000)
+                }
+            });
+            return valid
+        },
+
+        onItemInserting:function(grid){
+            var new_name = grid.item.name;
+            var new_type = grid.item.type;
+            var new_default_value = grid.item.default_value;
+
+            $.ajax({
+                url: '/is_var_valid2',
+                type: "POST",
+                dataType: 'json',
+                async:false,
+                data: {'new_name':new_name, "new_type":new_type, "new_default_value":new_default_value},
+                success: function(data){
+                    valid = data.boolean;
+                    message = data.message;
+                    $('.alert_red').text(message).show().fadeOut(3000)
+                }
+            });
+            return valid
         },
 
 
@@ -158,16 +193,7 @@ $(function() {
                     type: "POST",
                     url: "/add_variable",
                     data: {"name":name, "type":type, "default_value":default_value, "required" :required, "description": description},
-                    dataType: "json",
-                    success: function(data){
-                        if (data.error_mesage){
-                            $('.alert_red').text(data.error_mesage).fadeOut(3000)
-                        }
-                        else{
-                            $('.alert_green').text(data.add_message).fadeOut(3000)
-                        }
-
-                    }
+                    dataType: "json"
                 });
             },
 
@@ -196,7 +222,7 @@ $(function() {
                     dataType: "json",
                     data: {'var_name':var_name},
                     success: function(data){
-                        $('.alert_red').text(data.message).fadeOut(3000)
+                        $('.alert_red').text(data.message).show().fadeOut(3000)
                     }
 
                 });
