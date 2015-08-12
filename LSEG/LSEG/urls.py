@@ -65,7 +65,6 @@ urlpatterns = patterns('LSEGapp.views',
                        url(r'^delete_host/(?P<id_host>\d+)$','delete_host'),
                        url(r'^role_template_delete/(?P<id>\d+)$', 'delete_role_template'),
                        url(r'^component_template_delete/(?P<id>\d+)$', 'delete_component_template'),
-                       url(r'^delete_variable$','delete_variable'),
                        url(r'^role_delete/(?P<id_host>\d+)/(?P<id_host_role>\d+)$', 'delete_role'),
                        url(r'^component_delete/(?P<id_host>\d+)/(?P<id_role>\d+)/(?P<id_component>\d+)$', 'delete_component'),
 
@@ -77,18 +76,21 @@ urlpatterns = patterns('LSEGapp.views',
 
 
                        #VARIABLE URLS
-                       url(r'^add_variable$', 'add_variable'),
-                       url(r'update_variable$', 'update_variable'),
                        url(r'get_vars$', 'get_vars'),
+                       url(r'^add_variable$', 'add_variable'),
+                       url(r'^delete_variable$','delete_variable'),
+                       url(r'update_variable$', 'update_variable'),
                        url(r'is_var_used$', 'is_var_used'),
                        url(r'is_var_valid$', 'is_var_valid'),
                        url(r'is_var_valid2$', 'is_var_valid2'),
 
 
-                       url(r'get_components', 'get_components'),
+                       #COMPONENT URLS
+                       url(r'get_components$', 'get_components'),
+                       url(r'delete_component', 'delete_component'),
 
 
 
 
-                       )
+)
 

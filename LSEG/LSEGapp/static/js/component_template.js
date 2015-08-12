@@ -27,12 +27,17 @@ $(function(){
 
                 headerTemplate: function() {
                     return $("<button>").attr("type", "button").text("Add")
-                            .on("click", function () {
-                                showDetailsDialog("Add", {});
-                            });
+                        .on("click", function () {
+                            alert("Add je tai trouvé")
+                            showDetailsDialog("Add", {});
+                        });
                 }
             }
         ],
+
+        editItem: function(item){
+          alert(item.component)
+        },
 
         controller:{
             loadData: function(filter) {
@@ -58,11 +63,24 @@ $(function(){
             },
 
             updateItem: function(item) {
-
             },
 
             deleteItem: function(item) {
+                var component_name = item.component;
+
+                $.ajax({
+                    type: "POST",
+                    url: "/delete_component",
+                    dataType: "json",
+                    data: {'component_name':component_name},
+                    success: function(data){
+
+                    }
+
+                });
             }
+
+
         }
 
     });

@@ -78,7 +78,7 @@ $(function() {
         fields: [
             { name: "name", title: "Name", type: "text", align: "center"},
             { name: "type", title: "Type", type: "text", align: "center"},
-            { name: "default_value", title: "Default Value", type: "text", align: "center", filtering:false},
+            { name: "default_value", title: "Default Value", type: "text", align: "center", filtering:false, width:220},
             { name: "required", title: "Required", type: "checkbox", align: "center", filtering: false},
             { name: "description", title: "Description", type: "text", align: "center", filtering:false },
             { type: "control"}

@@ -80,7 +80,7 @@ class Component(models.Model):
 # Variable Class
 class Variable(models.Model):
     name = models.CharField(max_length=50, unique=True)
-    default_value = models.CharField(max_length=100)
+    default_value = models.CharField(max_length=200)
     type = models.CharField(max_length=50)
     required = models.BooleanField()
     description = models.TextField(blank=True)
