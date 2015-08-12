@@ -45,7 +45,7 @@ urlpatterns = patterns('LSEGapp.views',
 
                        #ADD URLS
                        url(r'^add_host/(?P<id_env>\d+)$', 'add_host'),
-                       url(r'^add_variable$', 'add_variable'),
+
 
 
                        #EDIT URLS
@@ -57,7 +57,7 @@ urlpatterns = patterns('LSEGapp.views',
                        url(r'edit_role/(?P<id_host>\d+)/(?P<id_role>\d+)$', 'edit_role'),
                        url(r'edit_value$', 'edit_value'),
                        url(r'edit_default_value$', 'edit_default_value'),
-                       url(r'update_variable$', 'update_variable'),
+
 
 
 
@@ -74,6 +74,11 @@ urlpatterns = patterns('LSEGapp.views',
                        url(r'set_default$', 'set_default'),
                        url(r'autocompletion_role_name$', 'autocompletion_role_name'),
                        url(r'role_filter$', 'role_filter'),
+
+
+                       #VARIABLE URLS
+                       url(r'^add_variable$', 'add_variable'),
+                       url(r'update_variable$', 'update_variable'),
                        url(r'get_vars$', 'get_vars'),
                        url(r'is_var_used$', 'is_var_used'),
                        url(r'is_var_valid$', 'is_var_valid'),

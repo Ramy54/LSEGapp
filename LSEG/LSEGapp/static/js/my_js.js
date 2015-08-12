@@ -1,8 +1,6 @@
 
 $(function() {
 
-    var variable_id =
-
 
         $(".variable").dblclick(function () {
             var element = this;
