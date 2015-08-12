@@ -85,6 +85,9 @@ urlpatterns = patterns('LSEGapp.views',
                        url(r'is_var_valid2$', 'is_var_valid2'),
 
 
+                       url(r'get_components', 'get_components'),
+
+
 
 
                        )

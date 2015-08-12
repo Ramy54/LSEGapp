@@ -4,7 +4,7 @@
 
 {% block customized_javascript %}
     <script type="text/javascript" src="{% static 'js/jquery.formset.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/role_template.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/component_template.js' %}"></script>
 {% endblock %}
 
 {% block extrahead %}
@@ -82,7 +82,10 @@
                         </td>
                         {% for component_variable in component.list %}
 
-                            <td>{{ component_variable.variable }}</td>
+                            <td>
+                                {{ component_variable.variable }}
+
+                            </td>
                             <td>{{ component_variable.variable.default_value }}</td>
                             </tr>
                             <tr>
