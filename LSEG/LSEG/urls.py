@@ -87,7 +87,9 @@ urlpatterns = patterns('LSEGapp.views',
 
                        #COMPONENT URLS
                        url(r'get_components$', 'get_components'),
+                       url(r'add_component$', 'add_component'),
                        url(r'delete_component', 'delete_component'),
+                       url(r'is_component_used', 'is_component_used'),
 
 
 

@@ -72,41 +72,6 @@ def role_template(request, delete_message=0):
     return render(request, 'template/role_template.html', locals())
 
 
-def component_template(request, delete_message='0'):
-    if delete_message == '1':
-        message = "The component has been deleted"
-    if delete_message == '2':
-        message = "This component is used. You can't delete it."
-
-    VariableFormset = formsets.formset_factory(AddVariableForm, can_delete=True)
-    components_variables = ComponentVariablesTemplate.objects.all()
-
-    if request.method == 'POST':
-        form2 = ComponentForm(request.POST)
-        formset = VariableFormset(request.POST)
-        if form2.is_valid():
-            try:
-                name = form2.cleaned_data['name']  # Get name from the form
-                component = Component(name=name)
-                component.save()
-                if formset.is_valid():
-                    for form in formset:
-                        var = form.cleaned_data['variable']
-                        component_variable = ComponentVariablesTemplate(component=component, variable=var)
-                        component_variable.save()
-
-            except IntegrityError:
-                errors = form2._errors.setdefault("name", ErrorList())
-                errors.append(u"This component already exists")
-
-    else:
-        form2 = ComponentForm()
-        formset = VariableFormset()
-
-    return render(request, 'template/component_template.html', locals())
-
-
-
 # ADD VIEWS
 def add_host(request, id_env):
     environment = Environment.objects.get(id=id_env)
@@ -297,38 +262,6 @@ def edit_component(request, id_host, id_role, id_component):
 
     return render(request, 'edit/edit_component.html', locals())
 
-
-def edit_component_template(request, id_component):
-    VariableFormset = formsets.formset_factory(AddVariableForm, extra=0)
-    component = Component.objects.get(id=id_component)
-    list_of_variables = ComponentVariablesTemplate.objects.filter(component=component).values('variable')
-
-    if request.method == 'POST':
-        form2 = ComponentForm(request.POST)
-        formset = VariableFormset(request.POST)
-        if form2.is_valid():
-            try:
-                name = form2.cleaned_data['name']
-                component.name = name
-                component.save()
-                ComponentVariablesTemplate.objects.filter(component=component).delete()
-                if formset.is_valid():
-                    for form in formset:
-                        if form.is_valid():
-                            variable = form.cleaned_data['variable']
-                            component_variable = ComponentVariablesTemplate(component=component, variable=variable)
-                            component_variable.save()
-
-                return redirect(component_template)
-            except IntegrityError:
-                errors = form2._errors.setdefault("name", ErrorList())
-                errors.append(u"This component already exists")
-
-    else:
-        formset = VariableFormset(initial=list_of_variables)
-        form2 = ComponentForm(initial={'name': component.name})
-
-    return render(request, 'template/edit_component_template.html', locals())
 
 
 def edit_variable(request, id_var):

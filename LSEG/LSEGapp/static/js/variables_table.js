@@ -11,6 +11,7 @@ $(function() {
         pageSize: 15,
         pageButtonCount: 5,
         filtering:true,
+        sorting:true,
         inserting:true,
         autoload:true,
         editing: true,
@@ -78,9 +79,9 @@ $(function() {
         fields: [
             { name: "name", title: "Name", type: "text", align: "center"},
             { name: "type", title: "Type", type: "text", align: "center"},
-            { name: "default_value", title: "Default Value", type: "text", align: "center", filtering:false, width:220},
-            { name: "required", title: "Required", type: "checkbox", align: "center", filtering: false},
-            { name: "description", title: "Description", type: "text", align: "center", filtering:false },
+            { name: "default_value", title: "Default Value", type: "text", align: "center", filtering:false, width:220, sorting:false},
+            { name: "required", title: "Required", type: "checkbox", align: "center", filtering: false, sorting:false},
+            { name: "description", title: "Description", type: "text", align: "center", filtering:false,sorting:false },
             { type: "control"}
         ],
 

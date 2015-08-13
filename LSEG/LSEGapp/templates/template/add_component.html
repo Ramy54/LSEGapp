@@ -1,0 +1,53 @@
+{% extends 'skeleton.html' %}
+
+{% load static %}
+
+{% block customized_javascript %}
+    <script type="text/javascript" src="{% static 'js/jquery.formset.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/component_template.js' %}"></script>
+
+{% endblock %}
+
+{% block extrahead %}
+    <!-- CSS for formset rendering -->
+    <link rel="stylesheet" href="{% static 'css/formset.css' %}" />
+{% endblock %}
+
+{% block nav %}
+    <li ><a href="{% url "LSEGapp.views.index"%}">Home</a></li>
+    <li><a href="{% url "LSEGapp.views.role_template" %}">Roles</a></li>
+    <li class="active"><a href="{% url "LSEGapp.views.component_template" %}">Components</a></li>
+    <li><a href="{% url "LSEGapp.views.variables"%}">Variables</a></li>
+{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h2>Add a component </h2>
+    </div>
+
+    <form method="post" action="">
+        {% csrf_token %}
+        <div style="margin-bottom: 10px">
+            <br> <strong> {{ form2.name.label }} :</strong>  {{ form2.name }}
+            <span style="display: inline-block; color: red;">{{form2.name.errors }}</span>
+        </div>
+
+        <div class="">
+            <div style="display: inline-block;" >
+                {% for form in formset.forms %}
+                    <div class= "formset"  style="padding-bottom:6px; border-bottom:1px dotted #ccc; margin-bottom:6px;">
+                        <strong>{{ form.variable.label}} : </strong>
+                        {{ form.variable }}
+                        <span style="display: inline-block; color: red;">{{form.variable.errors }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+            <p>
+                {{ formset.management_form }}
+                <input type="submit" class="btn btn-s btn-success" value="Add component" style=""/>
+            </p>
+        </div>
+
+
+    </form>
+{% endblock %}

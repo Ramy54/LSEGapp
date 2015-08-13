@@ -22,85 +22,9 @@
 
 {% block content %}
     <div class="page-header">
-        <h2>Add a component </h2>
-    </div>
-
-    <form method="post" action="{% url "LSEGapp.views.component_template" %}">
-        {% csrf_token %}
-        <div style="margin-bottom: 10px">
-            <br> <strong> {{ form2.name.label }} :</strong>  {{ form2.name }}
-            <span style="display: inline-block; color: red;">{{form2.name.errors }}</span>
-        </div>
-
-        <div class="">
-            <div style="display: inline-block;" >
-                {% for form in formset.forms %}
-                    <div class= "formset"  style="padding-bottom:6px; border-bottom:1px dotted #ccc; margin-bottom:6px;">
-                        <strong>{{ form.variable.label}} : </strong>
-                        {{ form.variable }}
-                        <span style="display: inline-block; color: red;">{{form.variable.errors }}</span>
-                    </div>
-                {% endfor %}
-            </div>
-            <p>
-                {{ formset.management_form }}
-                <input type="submit" class="btn btn-s btn-success" value="Add component" style=""/>
-            </p>
-        </div>
-
-
-    </form>
-
-
-
-    <div class="page-header">
-        <h3>Existing Components</h3>
-        <span style="display: inline-block; color: red;" class="delete_fade_out">{{ message }}</span>
-    </div>
-    <div class="row">
-        <div class="col-md-8">
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th class="col-md-3">Component</th>
-                    <th class="col-md-3">Variables</th>
-                    <th class="col-md-3">Default_Values</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% regroup components_variables by component as component_list %} <!-- the list of host_roles is regrouped by host -->
-                {% for component in component_list %}
-                    <tr>
-                        <td align="right">
-                            <span style="float: left"><strong>{{ component.grouper }}</strong></span>
-                            <button type="button" class="btn btn-xs btn-info" onclick="location.href='{% url "LSEGapp.views.edit_component_template" component.grouper.id  %}';">
-                                <span   class="glyphicon glyphicon-edit"></span>
-                            </button>
-                            <button type="button" id="submit" class="btn btn-xs btn-danger" onclick="location.href='{% url "LSEGapp.views.delete_component_template" component.grouper.id %}';"  >
-                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                            </button>
-
-                        </td>
-                        {% for component_variable in component.list %}
-
-                            <td>
-                                {{ component_variable.variable }}
-
-                            </td>
-                            <td>{{ component_variable.variable.default_value }}</td>
-                            </tr>
-                            <tr>
-                            <td></td>
-
-                        {% endfor %}
-                        <td></td>
-                        <td></td>
-                        </tr>
-                {% endfor %}
-
-                </tbody>
-            </table>
-        </div>
+        <h2>Components Table </h2>
+        <span style="display: inline-block; color: red;" class="alert_red"></span>
+        <span style="display: inline-block; color: green;" class="alert_green"></span>
     </div>
 
 

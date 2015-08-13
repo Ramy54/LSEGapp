@@ -17,7 +17,11 @@ $(function(){
         pageSize: 15,
         pageButtonCount: 5,
         filtering:true,
-        autoload: true,
+        sorting:true,
+        inserting:false,
+        autoload:true,
+        editing: false,
+
 
         fields: [
             { name: "component", title: "Component", type: "text", align: "center"},
@@ -26,18 +30,37 @@ $(function(){
                 modeSwitchButton: false,
 
                 headerTemplate: function() {
-                    return $("<button>").attr("type", "button").text("Add")
+                    return $("<button>").attr("type", "button").attr("class","btn btn-s btn-success").text("Add")
                         .on("click", function () {
-                            alert("Add je tai trouvé")
-                            showDetailsDialog("Add", {});
+                            location.href = 'add_component'
                         });
                 }
             }
         ],
 
-        editItem: function(item){
-          alert(item.component)
+        onItemDeleting: function(grid){ //Return if a variable is used by other roles
+            $.ajax({
+                url: '/is_component_used',
+                type: "POST",
+                dataType: 'json',
+                async:false,
+                data: {'component_name':grid.item.component},
+                success: function(data){
+                    used = data.boolean;
+                    message = data.message;
+                    $('.alert_red').text(message).show().fadeOut(3000)
+                }
+            });
+
+            return used
+
         },
+
+        editItem: function(item){
+            location.href = 'edit_component_template/' + item.id
+
+        },
+
 
         controller:{
             loadData: function(filter) {
@@ -84,6 +107,7 @@ $(function(){
         }
 
     });
+
 
 
 
