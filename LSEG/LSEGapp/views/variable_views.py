@@ -10,33 +10,9 @@ from django.forms.utils import ErrorList
 
 
 def variables(request, delete_message=0):
-    if delete_message == '1':
-        message = "Variable deleted."
-    if delete_message == '2':
-        message = "This variable is used. Please clear all dependencies."
-
     variables = Variable.objects.all()  # The variables to be given to the template
-
-    if request.method == 'POST':
-        form = VariableForm(request.POST)
-        if form.is_valid():
-            try:
-                name = form.cleaned_data['name']
-                default_value = form.cleaned_data['default_value']
-                type = form.cleaned_data['type']
-                required = form.cleaned_data['required']
-                description = form.cleaned_data['description']
-
-                new_var = Variable(name=name, default_value=default_value, type=type, required=required,
-                                   description=description)
-                new_var.save()
-            except IntegrityError:
-                errors = form._errors.setdefault("name", ErrorList())
-                errors.append(u"This variable already exists")
-    else:
-        form = VariableForm()
-
     return render(request, 'template/variables.html', locals())
+
 
 def get_vars(request):
     if request.is_ajax:
@@ -60,9 +36,6 @@ def get_vars(request):
         return HttpResponse("You failled")
 
 
-
-
-
 def add_variable(request):
     if request.is_ajax:
         name = request.POST['name']
@@ -79,6 +52,7 @@ def add_variable(request):
         return HttpResponse('Success')
     else:
         return HttpResponse("Fail")
+
 
 def delete_variable(request):
     if request.is_ajax:
@@ -110,6 +84,7 @@ def update_variable(request):
             required = False
         else:
             required = True
+
         description = request.POST['description']
 
         variable = Variable.objects.get(id=id)

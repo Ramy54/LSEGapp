@@ -52,17 +52,7 @@ def get_components(request):
         return HttpResponse("You failled")
 
 
-def delete_component(request):
-    if request.is_ajax:
-        component_name = request.POST['component_name']
-        component = Component.objects.get(name=component_name)
-        component.delete()
-        return HttpResponse('Success')
-
-    else:
-        return HttpResponse('You Failed')
-
-def add_component(request):
+def add_component_template(request):
     VariableFormset = formsets.formset_factory(AddVariableForm, can_delete=True)
 
     if request.method == 'POST':
@@ -88,7 +78,8 @@ def add_component(request):
         formset = VariableFormset()
         form2 = ComponentForm()
 
-    return render(request, 'template/add_component.html', locals())
+    return render(request, 'template/add_component_template.html', locals())
+
 
 def edit_component_template(request, id_component):
     VariableFormset = formsets.formset_factory(AddVariableForm, extra=0)
@@ -121,6 +112,17 @@ def edit_component_template(request, id_component):
         form2 = ComponentForm(initial={'name': component.name})
 
     return render(request, 'template/edit_component_template.html', locals())
+
+
+def delete_component_template(request):
+    if request.is_ajax:
+        component_name = request.POST['component_name']
+        component = Component.objects.get(name=component_name)
+        component.delete()
+        return HttpResponse('Success')
+
+    else:
+        return HttpResponse('You Failed')
 
 
 def is_component_used(request):

@@ -21,82 +21,15 @@
 
 {% block content %}
     <div class="page-header">
-        <h2>Add a role</h2>
-    </div>
-
-    <form id="myForm" method="post" action="{% url "LSEGapp.views.role_template" %}">
-
-        {% csrf_token %}
-
-        <div style="margin-bottom: 10px">
-            <br> <strong> {{ form2.business_application.label }} :</strong>  {{ form2.business_application }}
-                <span style="display: inline-block; color: red;">{{ form2.business_application.errors }}</span>
-            <br> <strong> {{ form2.name.label }} :</strong>  {{ form2.name }}
-                <span style="display: inline-block; color: red;">{{ form2.name.errors }}</span> <!-- Errors generated in red if the form is not valid -->
-        </div>
-
-
-        <div class="">
-            <div style="display: inline-block;" >
-                {% for form in formset.forms %}
-                    <div class= "formset"  style="padding-bottom:6px; border-bottom:1px dotted #ccc; margin-bottom:6px;">
-                        <strong>{{ form.component.label }} : </strong>
-                        {{ form.component }}
-                    </div>
-                {% endfor %}
-            </div>
-            <p>
-                {{ formset.management_form }}
-                <input type="submit" class="btn btn-s btn-success" value="Add role" style=""/>
-            </p>
-        </div>
-
-    </form>
-
-
-    <div class="page-header">
-        <h3>Existing Roles</h3>
-        <span style="display: inline-block; color: red;" class="delete_fade_out">{{ message }}</span>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th class="col-md-3">Role</th>
-                    <th class="col-md-3">Components</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% regroup roles_components by role as role_list %} <!-- the list of host_roles is regrouped by host -->
-                {% for role in role_list %}
-                    <tr>
-                        <td align="right">
-                            <span style="float: left;;"><strong>{{ role.grouper }}</strong></span>
-                            <button type="button" class="btn btn-xs btn-info" onclick="location.href='{% url "LSEGapp.views.edit_role_template" role.grouper.id  %}';">
-                                <span   class="glyphicon glyphicon-edit"></span>
-                            </button>
-                            <button type="button" class="btn btn-xs btn-danger"  name= "delete_button" onclick="location.href='{% url "LSEGapp.views.delete_role_template" role.grouper.id %}'" >
-                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                            </button>
-                        </td>
-                        {% for role_component in role.list %}
-
-                            <td>{{ role_component.component }}</td>
-                            </tr>
-                            <tr>
-                            <td></td>
-
-                        {% endfor %}
-                        <td></td>
-                        </tr>
-                {% endfor %}
-
-                </tbody>
-            </table>
-        </div>
+        <h2>Role Table </h2>
+        <span style="display: inline-block; color: red;" class="alert_red"></span>
+        <span style="display: inline-block; color: green;" class="alert_green"></span>
     </div>
 
 
+    <div id="jsGrid"></div>
 
+    <div class="page-header" style="margin-top: 75px">
+
+    </div>
 {% endblock %}

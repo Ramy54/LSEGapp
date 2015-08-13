@@ -8,8 +8,6 @@ $(function(){
         extraClasses: ['row1']
     });
 
-    $('.table').hide()
-
 
     $("#jsGrid").jsGrid({
 
@@ -32,7 +30,7 @@ $(function(){
                 headerTemplate: function() {
                     return $("<button>").attr("type", "button").attr("class","btn btn-s btn-success").text("Add")
                         .on("click", function () {
-                            location.href = 'add_component'
+                            location.href = 'add_component_template'
                         });
                 }
             }

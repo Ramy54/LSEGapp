@@ -131,10 +131,6 @@ def save_roles(host, roles_id):
                 component_variable.save()
 
 
-def add_role(request, id_host):
-    return
-
-
 # EDIT VIEWS
 def edit_host(request, id_host):
     host = Host.objects.get(id=id_host)
@@ -203,38 +199,6 @@ def edit_role(request, id_host, id_role):
 
     return render(request, 'edit/edit_role.html', locals())
 
-
-def edit_role_template(request, id_role):
-    ComponentFormset = formsets.formset_factory(AddComponentForm, extra=0)
-    role = Role.objects.get(id=id_role)
-    role_ba = RoleBusinessApplication.objects.get(role=role)
-    list_of_components = RoleComponentsTemplate.objects.filter(role=role).values('component')
-
-    if request.method == 'POST':
-        form2 = RoleForm(request.POST)
-        formset = ComponentFormset(request.POST)
-        if form2.is_valid():
-            try:
-                name = form2.cleaned_data['name']
-                role.name = name
-                role.save()
-                RoleComponentsTemplate.objects.filter(role=role).delete()
-                if formset.is_valid():
-                    for form in formset:
-                        if form.is_valid():
-                            component = form.cleaned_data['component']
-                            role_component = RoleComponentsTemplate(role=role, component=component)
-                            role_component.save()
-                return redirect(role_template)
-
-            except IntegrityError:
-                errors = form2._errors.setdefault("name", ErrorList())
-                errors.append(u"This role already exists")
-    else:
-        formset = ComponentFormset(initial=list_of_components)
-        form2 = RoleForm(initial={'name': role.name, 'business_application': role_ba.business_application})
-
-    return render(request, 'template/edit_role_template.html', locals())
 
 
 def edit_component(request, id_host, id_role, id_component):
@@ -311,29 +275,6 @@ def delete_host(request, id_host):
     return redirect(index)
 
 
-def delete_role_template(request, id):
-    try:
-        role = Role.objects.get(id=id)
-        role.delete()
-
-        RoleComponentsTemplate.objects.filter(role=role).delete()
-
-        return redirect(role_template, delete_message=1)
-
-    except models.ProtectedError:
-        return redirect(role_template, delete_message=2)
-
-
-def delete_component_template(request, id):
-    try:
-        component = Component.objects.get(id=id)
-        component.delete()
-
-        ComponentVariablesTemplate.objects.filter(component=component).delete()
-        return redirect(component_template, delete_message=1)
-
-    except models.ProtectedError:
-        return redirect(component_template, delete_message=2)
 
 
 def delete_role(request, id_host, id_host_role):
