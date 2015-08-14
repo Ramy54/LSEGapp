@@ -8,6 +8,9 @@ $(function(){
         extraClasses: ['row1']
     });
 
+    $('#id_form-0-variable')
+
+
 
     $("#jsGrid").jsGrid({
 

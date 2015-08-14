@@ -140,6 +140,22 @@
     margin-left: 5px;
 }
 
+.generate-button{
+    margin-left: 5px;
+    width: 16px;
+    height: 16px;
+    border: none;
+    cursor: pointer;
+    background: url("save.png");
+    background-repeat: no-repeat;
+    background-color: transparent;;
+}
+
+.generate-button:hover{
+    opacity: .5;
+    transition: opacity 200ms linear;
+}
+
 .jsgrid-button:hover {
     opacity: .5;
     transition: opacity 200ms linear;

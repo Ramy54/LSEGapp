@@ -1009,6 +1009,13 @@
             }
         },
 
+        generateItem: function(item) {
+            var $row = this._rowByItem(item);
+            if($row.length) {
+                this._generateRow($row);
+            }
+        },
+
         _rowByItem: function(item) {
             if(item.jquery || item.nodeType)
                 return $(item);
@@ -1033,6 +1040,11 @@
             $row.hide();
             $editRow.insertAfter($row);
             $row.data(JSGRID_EDIT_ROW_DATA_KEY, $editRow);
+        },
+
+        _generateRow: function($row){
+            alert("test2")
+
         },
 
         _createEditRow: function(item) {
@@ -1903,6 +1915,7 @@
         insertModeButtonClass: "jsgrid-insert-mode-button",
         editButtonClass: "jsgrid-edit-button",
         deleteButtonClass: "jsgrid-delete-button",
+        generateButtonClass: "generate-button",
         searchButtonClass: "jsgrid-search-button",
         clearFilterButtonClass: "jsgrid-clear-filter-button",
         insertButtonClass: "jsgrid-insert-button",
@@ -1914,6 +1927,7 @@
         editButtonTooltip: "Edit",
         deleteButtonTooltip: "Delete",
         searchButtonTooltip: "Search",
+        generateButtonTooltip: "Generate",
         clearFilterButtonTooltip: "Clear filter",
         insertButtonTooltip: "Insert",
         updateButtonTooltip: "Update",
@@ -1921,6 +1935,8 @@
 
         editButton: true,
         deleteButton: true,
+        generateButton: true,
+
         clearFilterButton: true,
         modeSwitchButton: true,
 
@@ -1964,6 +1980,10 @@
 
             if(this.deleteButton) {
                 $result = $result.add(this._createDeleteButton(item));
+            }
+
+            if(this.generateButton) {
+                $result = $result.add(this._createGenerateButton(item));
             }
 
             return $result;
@@ -2029,6 +2049,13 @@
             return $button;
         },
 
+        _createGenerateButton: function(item){
+            return this._createGridButton(this.generateButtonClass, this.generateButtonTooltip, function(grid,e){
+                grid.generateItem(item);
+                e.stopPropagation()
+            })
+        },
+
         _createEditButton: function(item) {
             return this._createGridButton(this.editButtonClass, this.editButtonTooltip, function(grid, e) {
                 grid.editItem(item);
@@ -2079,15 +2106,30 @@
         _createGridButton: function(cls, tooltip, clickHandler) {
             var grid = this._grid;
 
-            return $("<input>").addClass(this.buttonClass)
-                .addClass(cls)
-                .attr({
-                    type: "button",
-                    title: tooltip
-                })
-                .on("click", function(e) {
-                    clickHandler(grid, e);
-                });
+            if (cls=="generate-button"){
+                return $("<input>")
+                    .addClass(cls)
+                    .attr({
+                        type: "button",
+                        title: tooltip,
+                    })
+                    .on("click", function(e) {
+                        clickHandler(grid, e);
+                    });
+            }
+            else{
+                return $("<input>").addClass(this.buttonClass)
+                    .addClass(cls)
+                    .attr({
+                        type: "button",
+                        title: tooltip
+                    })
+                    .on("click", function(e) {
+                        clickHandler(grid, e);
+                    });
+            }
+
+
         },
 
         editValue: function() {

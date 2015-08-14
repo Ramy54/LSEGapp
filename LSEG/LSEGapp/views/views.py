@@ -28,49 +28,41 @@ def index(request):
 
     return render(request, 'index.html', locals())
 
+def get_hosts(request):
+    if request.is_ajax:
+        host_filter = request.POST['host_filter']
+        id_env = request.POST['id_env']
+        hosts_roles = HostRole.objects.all().order_by('host__name')
+        if host_filter != "":
+            hosts = Host.objects.all().filter(name__contains=host_filter)
+            hosts_roles = hosts_roles.filter(host=hosts)
 
-def skeleton(request):
-    return render(request, "skeleton.html")
+        dict ={}
+        hosts_roles_list = []
 
+        if hosts_roles.exists():
+            host_role = hosts_roles[0]
+            host_role_old = hosts_roles[0]
+            role_text = '<a>' + host_role_old.role.name + '</a>'
 
-# TEMPLATE VIEWS
-def role_template(request, delete_message=0):
-    if delete_message == "1":
-        message = "The role has been deleted"
-    if delete_message == "2":
-        message = "The role is used you can't delete it"
+            for host_role in hosts_roles[1:]:
+                if host_role.host.name == host_role_old.host.name:
+                    role_text = role_text + '<br><a>' + host_role.role.name + '</a>'
+                else:
+                    record = {'id': host_role_old.host.id, 'host':host_role_old.host.name,'role_text': role_text}
+                    hosts_roles_list.append(record)
+                    role_text= '<a>' + host_role.role.name + '</a>'
+                host_role_old = host_role
 
-    ComponentFormset = formset_factory(AddComponentForm)
-    roles_components = RoleComponentsTemplate.objects.all()
+            if host_role.host.name == host_role_old.host.name:
+                role_text = role_text
+                record = {'id': host_role_old.host.id, 'host':host_role_old.host.name,'role_text': role_text}
+                hosts_roles_list.append(record)
 
-    if request.method == 'POST':
-        form2 = RoleForm(request.POST)
-        formset = ComponentFormset(request.POST)
-
-        if form2.is_valid():
-            try:
-                name = form2.cleaned_data['name']  # Get name from the form
-                business_application = form2.cleaned_data['business_application']
-
-                role = Role(name=name)
-                role.save()
-
-                role_ba = RoleBusinessApplication(role=role, business_application=business_application)
-                role_ba.save()
-                if formset.is_valid():
-                    for form in formset:
-                        component = form.cleaned_data['component']
-                        role_component = RoleComponentsTemplate(role=role, component=component)
-                        role_component.save()
-            except IntegrityError:
-                errors = form2._errors.setdefault("name", ErrorList())
-                errors.append(u"This role already exists")
-
+        dict['host_roles'] = hosts_roles_list
+        return JsonResponse(dict)
     else:
-        form2 = RoleForm()
-        formset = ComponentFormset()
-    return render(request, 'template/role_template.html', locals())
-
+        return HttpResponse("You failled")
 
 # ADD VIEWS
 def add_host(request, id_env):
@@ -144,7 +136,7 @@ def edit_host(request, id_host):
                 host.save()
             business_application = form3.cleaned_data['business_application']
 
-            return redirect(host_details_2, id_host=id_host)
+            return redirect(host_details, id_host=id_host)
 
         except IntegrityError:
             errors = form3._errors.setdefault("name", ErrorList())
@@ -182,18 +174,6 @@ def save_roles(host, roles_id):
 
 
 
-def edit_default_value(request):
-    if request.is_ajax():
-        new_value = request.POST['new_value']
-        variable_id = request.POST['var_id']
-        variable = Variable.objects.get(id=variable_id)
-        variable.default_value = new_value
-        variable.save()
-        return HttpResponse("")
-    else:
-        return HttpResponse("Fail")
-
-
 def edit_value(request):
     if request.is_ajax:
         new_value = request.POST['new_value']
@@ -216,15 +196,8 @@ def delete_host(request, id_host):
 
 # DETAILS VIEWS
 
+
 def host_details(request, id_host):
-    host = Host.objects.get(id=id_host)
-    host_roles = HostRole.objects.filter(host=host)
-    role_components = RoleComponents.objects.filter(host_role=host_roles)
-
-    return render(request, 'details/host_details.html', locals())
-
-
-def host_details_2(request, id_host):
     host = Host.objects.get(id=id_host)
     host_roles = HostRole.objects.filter(host=host)
     roles_components = RoleComponents.objects.filter(host_role=host_roles)
@@ -245,7 +218,7 @@ def host_details_2(request, id_host):
         object = [ComponentVariableList(role_component=role_component, variable_list=variable_list)]
         object_list = object_list + object
 
-    return render(request, 'details/host_details2.html', locals())
+    return render(request, 'details/host_details.html', locals())
 
 
 def role_details(request, id_host, id_role):
@@ -273,7 +246,7 @@ def set_default(request):
         return HttpResponse("Ramy you failed")
 
 
-def autocompletion_role_name(request):
+def autocomplete_role_name(request):
     if request.is_ajax:
         business_app = request.POST['business_app']
         ba = BusinessApplication.objects.get(name=business_app)

@@ -1,7 +1,9 @@
 {% extends 'skeleton.html' %}
 
-{% block extrahead %}
+{% load static %}
 
+{% block customized_javascript %}
+    <script type="text/javascript" src="{% static 'js/index_table.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -31,7 +33,7 @@
                 {% for group in host_grouped %}
                     <tr>
                         <td>
-                            <strong><a href="{% url "LSEGapp.views.host_details_2" group.grouper.id %}">{{ group.grouper }}</a></strong>
+                            <strong><a href="{% url "LSEGapp.views.host_details" group.grouper.id %}">{{ group.grouper }}</a></strong>
 
                             <button style="float: right"  title="Delete" class="btn btn-xs btn-danger" onclick="location.href='{% url "LSEGapp.views.delete_host" group.grouper.id  %}';">
                                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
@@ -59,6 +61,12 @@
                 </tbody>
             </table>
         </div>
+    </div>
+
+    <div id="jsGrid"></div>
+
+    <div class="page-header" style="margin-top: 75px">
+
     </div>
 
 
