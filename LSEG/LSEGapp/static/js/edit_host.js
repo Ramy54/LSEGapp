@@ -10,7 +10,7 @@ $(function(){
         ]
     });
 
-    $('.formset').hide();
+    $('#id_business_application').attr('disabled',true);
 
     $('#id_business_application').change(function(){
         $('.formset').show();
@@ -63,7 +63,7 @@ $(function(){
     });
 
 
-    $('#add_host').click(function(){
+    $('#save_host').click(function(){
         $('#id_business_application').attr('disabled',false);
         window.location.reload(true);
     });

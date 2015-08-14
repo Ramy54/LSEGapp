@@ -10,8 +10,6 @@ class EnvironmentForm(forms.Form):
     environment = forms.ModelChoiceField(queryset=Environment.objects.all(), label="Environment", widget= forms.Select(attrs={"onChange":'this.form.submit();'}), initial=1)
     #Widget option onchange that allows to sumbit the form whenever we have changed the value of the droplist
 
-class EnvironmentForm2(forms.Form):
-    environment = forms.ModelChoiceField(queryset=Environment.objects.all(),label="Environment",initial=1)
 
 # TO ADD A HOST
 
@@ -19,6 +17,7 @@ class EnvironmentForm2(forms.Form):
 class HostForm(forms.Form):
     name = forms.CharField(required=True, widget=forms.TextInput(attrs={'autocomplete':'off'}))
     business_application = forms.ModelChoiceField(queryset=BusinessApplication.objects.all().order_by('name'),label="Business Application", empty_label="--SELECT--")
+
 
 
 # TO ADD A ROLE TEMPLATE

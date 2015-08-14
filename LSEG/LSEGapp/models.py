@@ -164,6 +164,9 @@ class ComponentVariableList:
         self.role_component = role_component
         self.variable_list = variable_list
 
+    def __str__(self):
+        return '{role_component: ' + self.role_component.component.name + ' , variable_list : ' + self.variable_list
+
 
 class VariableUsed:
     def __init__(self,variable,used):

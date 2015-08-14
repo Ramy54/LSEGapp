@@ -32,8 +32,6 @@ urlpatterns = patterns('LSEGapp.views',
                        url(r'^host_details/(?P<id_host>\d+)$','host_details'),
                        url(r'^host_details_2/(?P<id_host>\d+)$','host_details_2'),
                        url(r'^role_details/(?P<id_host>\d+)/(?P<id_role>\d+)$','role_details'),
-                       url(r'^component_details/(?P<id_host>\d+)/(?P<id_role>\d+)/(?P<id_component>\d+)$','component_details'),
-
 
                        #ADD URLS
                        url(r'^add_host/(?P<id_env>\d+)$', 'add_host'),
@@ -42,10 +40,8 @@ urlpatterns = patterns('LSEGapp.views',
 
                        #EDIT URLS
                        url(r'^edit_host/(?P<id_host>\d+)$', 'edit_host'),
-                       url(r'^edit_component/(?P<id_host>\d+)/(?P<id_role>\d+)/(?P<id_component>\d+)$', 'edit_component'),
-                       url(r'^edit_role/(?P<id_host>\d+)/(?P<id_role>\d+)$', 'edit_role'),
-                       url(r'^edit_value$', 'edit_value'),
                        url(r'^edit_default_value$', 'edit_default_value'),
+                       url(r'^edit_value$', 'edit_value'),
 
 
 
@@ -53,9 +49,6 @@ urlpatterns = patterns('LSEGapp.views',
                        #DELETE URLS
                        url(r'^delete_host/(?P<id_host>\d+)$','delete_host'),
                        url(r'^role_template_delete/(?P<id>\d+)$', 'delete_role_template'),
-                       url(r'^role_delete/(?P<id_host>\d+)/(?P<id_host_role>\d+)$', 'delete_role'),
-                       url(r'^component_delete/(?P<id_host>\d+)/(?P<id_role>\d+)/(?P<id_component>\d+)$', 'delete_component'),
-
                        #CUSTOM URLS
                        url(r'^save_file/(?P<id_host>\d+)$','save_file'),
                        url(r'^set_default$', 'set_default'),

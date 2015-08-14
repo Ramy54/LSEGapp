@@ -195,20 +195,22 @@
         return $$;
     };
 
+    // RAMY CUSTOM FUNCTIONS WHEN CLICK ON ADD AND DELETE
     function add_custom_function(formCount){   //totalForms = number of forms after adding the form
 
         var data = {};
-        $('#id_form-' + (formCount -1) + '-role > option:not(:selected)').each(function(){
+        $('#id_form-' + (formCount -1) + '-role > option:not(:selected)').each(function(){  //populate data list with the first form dropdown without taking the selected item.
             role_id = $(this).val();
             role_name = $(this).text();
             data[role_id] = role_name;
         });
-        $('#id_form-' + formCount + '-role').empty();
+        $('#id_form-' + formCount + '-role').empty();       //populate the next form with data
         $.each(data, function(key, value){
             $('#id_form-' + formCount + '-role').append('<option value="' + key + '">' + value +'</option>');
         });
 
-        if (Object.keys(data).length == 1){
+
+        if (Object.keys(data).length == 1){     //If size of the data array equal = 1 then we hide the addè
             $('.add-row').hide()
         }
 

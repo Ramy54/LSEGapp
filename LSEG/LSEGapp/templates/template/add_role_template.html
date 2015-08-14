@@ -28,23 +28,26 @@
 
         {% csrf_token %}
 
-        <div style="margin-bottom: 10px">
+        <div style="">
             <br> <strong> {{ form2.business_application.label }} :</strong>  {{ form2.business_application }}
-                <span style="display: inline-block; color: red;">{{ form2.business_application.errors }}</span>
+            <span style="display: inline-block; color: red;">{{ form2.business_application.errors }}</span>
+        </div>
+
+        <div style="margin-bottom: 15px">
             <br> <strong> {{ form2.name.label }} :</strong>  {{ form2.name }}
-                <span style="display: inline-block; color: red;">{{ form2.name.errors }}</span> <!-- Errors generated in red if the form is not valid -->
+            <span style="display: inline-block; color: red;">{{ form2.name.errors }}</span> <!-- Errors generated in red if the form is not valid -->
         </div>
 
 
-        <div class="">
-            <div style="display: inline-block;" >
-                {% for form in formset.forms %}
-                    <div class= "formset"  style="padding-bottom:6px; border-bottom:1px dotted #ccc; margin-bottom:6px;">
-                        <strong>{{ form.component.label }} : </strong>
-                        {{ form.component }}
-                    </div>
-                {% endfor %}
-            </div>
+        <div style="display: inline-block; margin-bottom: 20px"  >
+            {% for form in formset.forms %}
+                <div class= "formset"  style="padding-bottom:6px; border-bottom:1px dotted #ccc; margin-bottom:6px;">
+                    <strong>{{ form.component.label }} : </strong>
+                    {{ form.component }}
+                </div>
+            {% endfor %}
+        </div>
+        <div>
             <p>
                 {{ formset.management_form }}
                 <input type="submit" class="btn btn-s btn-success" value="Add role" style=""/>

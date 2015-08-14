@@ -21,19 +21,16 @@
 
 
 {% block content %}
-    <div class="page-header">
-        <h2>Edit component : <strong>{{ component }}</strong></h2>
-    </div>
 
-<form method="post" action="">
+    <form method="post" action="">
         {% csrf_token %}
-        <div style="margin-bottom: 10px">
+        <div style="margin-bottom: 30px">
             <br> <strong> {{ form2.name.label }} :</strong>  {{ form2.name }}
             <span style="display: inline-block; color: red;">{{form2.name.errors }}</span>
         </div>
 
         <div class="">
-            <div style="display: inline-block;" >
+            <div style="display: inline-block;margin-bottom: 20px" >
                 {% for form in formset.forms %}
                     <div class= "formset"  style="padding-bottom:6px; border-bottom:1px dotted #ccc; margin-bottom:6px;">
                         <strong>{{ form.variable.label}} : </strong>
@@ -47,7 +44,6 @@
                 <input type="submit" class="btn btn-s btn-success" value="Save component" style=""/>
             </p>
         </div>
-
 
     </form>
 

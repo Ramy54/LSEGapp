@@ -42,7 +42,7 @@ $(function(){
                     used = data.boolean;
                     message = data.message;
                     if(message){
-                        $('.alert_red').text(message).show().fadeOut(3000)
+                        $('.alert_red').text(message).show().fadeOut(5000)
                     }
 
                 }

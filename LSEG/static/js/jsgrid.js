@@ -1538,7 +1538,7 @@
                 return "";
 
             var grid = this._grid,
-                $result = this.filterControl = this._createTextBox();
+                $result = this.filterControl = this._createTextBox("Filter");
 
             if(this.autosearch) {
                 $result.on("keypress", function(e) {
@@ -1581,8 +1581,8 @@
             return this.editControl.val();
         },
 
-        _createTextBox: function() {
-            return $("<input>").attr("type", "text");
+        _createTextBox: function(placeholder) {
+            return $("<input>").attr("type", "text").attr("placeholder", placeholder);
         }
     });
 

@@ -79,7 +79,7 @@ def add_host(request, id_env):
     RoleFormset = formset_factory(AddRoleForm)
 
     if request.method == 'POST':
-        form2 = HostForm(request.POST, auto_id=True)
+        form2 = HostForm(request.POST)
         formset = RoleFormset(request.POST)
 
         if form2.is_valid():
@@ -106,41 +106,25 @@ def add_host(request, id_env):
                 errors.append(u"This host already exists")
 
     else:
+        ba_ids = RoleBusinessApplication.objects.all().values_list('business_application',flat=True).distinct() #LIST OF BusinessApplications ids when ba is used
         form2 = HostForm()
+        form2.fields['business_application'].queryset = BusinessApplication.objects.all().filter(id__in= ba_ids)
         formset = RoleFormset()
 
     return render(request, 'add/add_host.html', locals())
-
-
-def save_roles(host, roles_id):
-    for role_id in roles_id:
-        host_role = HostRole(host=host, role=Role.objects.get(id=role_id))
-        host_role.save()  # Add a host role
-        role_components_template = RoleComponentsTemplate.objects.filter(role=Role.objects.get(id=role_id))
-
-        for role_component_template in role_components_template:  #THIS LOOP ADDS THE DIFFERENT COMPONENTS OF A TEMPLATE ROLE
-            component = role_component_template.component
-            role_component = RoleComponents(host_role=host_role, component=component)
-            role_component.save()  # Save the role_component generated from the template
-            component_variables_template = ComponentVariablesTemplate.objects.filter(
-                component=Component.objects.get(name=component.name))
-
-            for component_variable_template in component_variables_template:  # THIS LOOP ADDS THE DIFFERENT VARIABLES OF A COMPONENT TEMPLATE
-                variable = component_variable_template.variable
-                component_variable = ComponentVariables(role_component=role_component, variable=variable)
-                component_variable.save()
-
 
 # EDIT VIEWS
 def edit_host(request, id_host):
     host = Host.objects.get(id=id_host)
     environment = host.environment
     host_roles = HostRole.objects.filter(host=host)
-    list_of_roles = HostRole.objects.filter(host=host).values('role')
-    RoleFormset = formset_factory(AddRoleForm)
+    list_of_roles = host_roles.values('role')
+    role = Role.objects.get(id=list_of_roles[0]['role'])
+    business_application = RoleBusinessApplication.objects.filter(role=role).first().business_application
+    RoleFormset = formset_factory(AddRoleForm,extra=0)
     if request.method == 'POST':
-        form2 = EnvironmentForm2(request.POST)
-        form3 = HostForm(request.POST, auto_id=True)
+        form2 = EnvironmentForm(request.POST)
+        form3 = HostForm(request.POST)
         formset = RoleFormset(request.POST)
         host_roles.delete()
         if form2.is_valid():
@@ -167,80 +151,35 @@ def edit_host(request, id_host):
             errors.append(u"This host already exists")
 
     else:
-        form2 = EnvironmentForm2(initial={'environment': environment})
-        form3 = HostForm(initial={'name': host.name, })
+        ba_ids = RoleBusinessApplication.objects.all().values_list('business_application',flat=True).distinct() #LIST OF BusinessApplications ids when ba is used
+        form2 = EnvironmentForm()
+        form2['environment'].initial = {'environment': environment}
+        form3 = HostForm(initial={'name': host.name, 'business_application': business_application})
+        form3.fields['business_application'].queryset = BusinessApplication.objects.all().filter(id__in= ba_ids)
         formset = RoleFormset(initial=list_of_roles)
 
     return render(request, 'edit/edit_host.html', locals())
 
 
-def edit_role(request, id_host, id_role):
-    ComponentFormset = formsets.formset_factory(AddComponentForm, extra=0)
-    host = Host.objects.get(id=id_host)
-    role = Role.objects.get(id=id_role)
-    host_role = HostRole.objects.get(host=host, role=role)
-    list_of_components = RoleComponents.objects.filter(host_role=host_role).values('component')
 
-    if request.method == 'POST':
-        RoleComponents.objects.filter(host_role=host_role).delete()
-        formset = ComponentFormset(request.POST)
+def save_roles(host, roles_id):
+    for role_id in roles_id:
+        host_role = HostRole(host=host, role=Role.objects.get(id=role_id))
+        host_role.save()  # Add a host role
+        role_components_template = RoleComponentsTemplate.objects.filter(role=Role.objects.get(id=role_id))
 
-        if formset.is_valid():
-            for form in formset:
-                if form.is_valid():
-                    component = form.cleaned_data['component']
-                    role_component = RoleComponents(host_role=host_role, component=component)
-                    role_component.save()
+        for role_component_template in role_components_template:  #THIS LOOP ADDS THE DIFFERENT COMPONENTS OF A TEMPLATE ROLE
+            component = role_component_template.component
+            role_component = RoleComponents(host_role=host_role, component=component)
+            role_component.save()  # Save the role_component generated from the template
+            component_variables_template = ComponentVariablesTemplate.objects.filter(
+                component=Component.objects.get(name=component.name))
 
-        return redirect(host_details, id_host=id_host)
-    else:
-        formset = ComponentFormset(initial=list_of_components)
-        form2 = RoleForm(initial={'name': role.name})
+            for component_variable_template in component_variables_template:  # THIS LOOP ADDS THE DIFFERENT VARIABLES OF A COMPONENT TEMPLATE
+                variable = component_variable_template.variable
+                component_variable = ComponentVariables(role_component=role_component, variable=variable)
+                component_variable.save()
 
-    return render(request, 'edit/edit_role.html', locals())
-
-
-
-def edit_component(request, id_host, id_role, id_component):
-    host = Host.objects.get(id=id_host)
-    role = Role.objects.get(id=id_role)
-    host_role = HostRole.objects.get(host=host, role=role)
-    component = Component.objects.get(id=id_component)
-    role_component = RoleComponents.objects.get(host_role=host_role, component=component)
-    VariableFormset = formsets.formset_factory(AddVariableForm, extra=0)
-    list_of_variables = ComponentVariables.objects.filter(role_component=role_component).values('variable')
-
-    if request.method == 'POST':
-        ComponentVariables.objects.filter(role_component=role_component).delete()
-        formset = VariableFormset(request.POST)
-        if formset.is_valid():
-            for form in formset:
-                if form.is_valid():
-                    variable = form.cleaned_data['variable']
-                    component_variable = ComponentVariables(role_component=role_component, variable=variable)
-                    component_variable.save()
-
-        return redirect(role_details, id_host=id_host, id_role=id_role)
-    else:
-        formset = VariableFormset(initial=list_of_variables)
-
-    return render(request, 'edit/edit_component.html', locals())
-
-
-
-def edit_variable(request, id_var):
-    var = Variable.objects.get(id=id_var)
-    if request.method == 'POST':
-        try:
-            form = VariableForm(request.POST, instance=var)
-            form.save()
-            return redirect(variables)
-        except ValueError:
-            errors = form._errors.setdefault("name", ErrorList())
-    else:
-        form = VariableForm(instance=var)
-
-    return render(request, 'template/edit_variable.html', locals())
 
 
 def edit_default_value(request):
@@ -275,33 +214,6 @@ def delete_host(request, id_host):
     return redirect(index)
 
 
-
-
-def delete_role(request, id_host, id_host_role):
-    host = Host.objects.get(id=id_host)
-    host_roles = HostRole.objects.all().filter(host=host)
-    host_role = HostRole.objects.get(id=id_host_role)
-    host_role.delete()
-    if len(host_roles) == 0:
-        host.delete()
-
-    return redirect(host_details, id_host=id_host)
-
-
-def delete_component(request, id_host, id_role, id_component):
-    host = Host.objects.get(id=id_host)
-    role = Role.objects.get(id=id_role)
-    host_role = HostRole.objects.get(host=host, role=role)
-    component = Component.objects.get(id=id_component)
-    role_components = RoleComponents.objects.filter(host_role=host_role)
-    role_component = RoleComponents.objects.get(host_role=host_role, component=component)
-    role_component.delete()
-    if len(role_components) == 0:
-        host_role.delete()
-
-    return redirect(role_details, id_host=id_host, id_role=id_role)
-
-
 # DETAILS VIEWS
 
 def host_details(request, id_host):
@@ -318,19 +230,20 @@ def host_details_2(request, id_host):
     roles_components = RoleComponents.objects.filter(host_role=host_roles)
     object_list = []
 
-    role_components = roles_components[0]
-    variable_list = ComponentVariables.objects.filter(role_component=role_components)
-    object = [ComponentVariableList(role_component=role_components, variable_list=variable_list)]
+    role_component_old = roles_components[0]
+    variable_list = ComponentVariables.objects.filter(role_component=role_component_old)
+    object = [ComponentVariableList(role_component=role_component_old, variable_list=variable_list)]
     object_list = object_list + object
-    role_component_old = role_components
 
-    for role_components in roles_components[1:]:
-        variable_list = ComponentVariables.objects.filter(role_component=role_components)
-        if role_components.host_role.role.name == role_component_old.host_role.role.name:
-            role_components.host_role.role.name = ""
-        object = [ComponentVariableList(role_component=role_components, variable_list=variable_list)]
+    for role_component in roles_components[1:]:
+        variable_list = ComponentVariables.objects.filter(role_component=role_component)
+        if role_component.host_role.role == role_component_old.host_role.role:
+            role_component_old = role_component
+            role_component.host_role.role.name = ""
+        else:
+            role_component_old = role_component
+        object = [ComponentVariableList(role_component=role_component, variable_list=variable_list)]
         object_list = object_list + object
-        role_component_old = role_components
 
     return render(request, 'details/host_details2.html', locals())
 
@@ -343,17 +256,6 @@ def role_details(request, id_host, id_role):
     components_variables = ComponentVariables.objects.filter(role_component=role_components)
 
     return render(request, 'details/role_details.html', locals())
-
-
-def component_details(request, id_host, id_role, id_component):
-    host = Host.objects.get(id=id_host)
-    role = Role.objects.get(id=id_role)
-    host_role = HostRole.objects.get(host=host, role=role)
-    component = Component.objects.get(id=id_component)
-    role_component = RoleComponents.objects.get(host_role=host_role, component=component)
-    components_variables = ComponentVariables.objects.filter(role_component=role_component)
-
-    return render(request, 'details/component_details.html', locals())
 
 
 # CUSTOM VIEWS
@@ -391,11 +293,24 @@ def save_file(request, id_host):
 
     response['Content-Disposition'] = "attachment; filename=" + host.name + ".yaml"
 
-    for component_variable in components_variables:
+    list = [components_variables[0]]
+
+    for component_variable in components_variables[1:]:
+        i = 0
+        found = False
+        while i < len(list) and (not found):
+           found = component_variable.variable.name == list[i].variable.name
+           i= i+1
+
+        if (not found):
+            list = list + [component_variable]
+
+
+    for component_variable in list:
         variable = component_variable.variable.name
         response.write(variable + ": ")
         if component_variable.value == "":
-            response.write(component_variable.variable.default_value + "\n")
+            response.write("\'" + component_variable.variable.default_value + "\' \n")
         else:
             response.write(component_variable.value + "\n")
 

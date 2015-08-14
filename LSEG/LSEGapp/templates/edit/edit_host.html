@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block customized_javascript %}
-    <script type="text/javascript" src="{% static 'js/add_host.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/edit_host.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/add_host_formset.js' %}"></script>{% endblock %}
 {% block extrahead %}
     <link rel="stylesheet" href="{% static 'css/formset.css' %}" />
@@ -17,15 +17,23 @@
 
         <div style="margin-bottom: 10px">
             <br> <strong> {{ form2.environment.label }} :</strong>  {{ form2.environment }}
-            <br> <strong> {{ form3.name.label }} :</strong>  {{ form3.name }}
-                <span style="display: inline-block; color: red;">{{ form3.name.errors }}</span> <!-- Errors generated in red if the form is not valid -->
-            <br> <strong> {{ form3.business_application.label }} :</strong>  {{ form3.business_application }}
-                <span style="display: inline-block; color: red;">{{ form3.business_application.errors }}</span> <!-- Errors generated in red if the form is not valid -->
-
         </div>
 
-        <div class="">
-            <div style="display: inline-block;" >
+        <div style="margin-bottom: 10px">
+            <strong> {{ form3.name.label }} :</strong>
+            {{ form3.name }}
+            <span style="display: inline-block; color: red;">{{ form3.name.errors }}</span> <!-- Errors generated in red if the form is not valid -->
+        </div>
+
+        <div style="margin-bottom: 10px">
+            <strong> {{ form3.business_application.label }} :</strong>
+            {{ form3.business_application }}
+            <span style="display: inline-block; color: red;">{{ form3.business_application.errors }}</span> <!-- Errors generated in red if the form is not valid -->
+        </div>
+
+
+        <div style="margin-top: 20px">
+            <div style="display: inline-block;"  class="formset">
 
                 {% for form in formset.forms %}
                     {{ form.non_field_errors }}
@@ -37,7 +45,7 @@
             </div>
             <p>
                 {{ formset.management_form }}
-                <input type="submit" class="btn btn-s btn-success" value="Save changes" style=""/>
+                <input id="save_host" type="submit" class="btn btn-s btn-success" value="Save changes" style="margin-top: 20px"/>
             </p>
         </div>
 

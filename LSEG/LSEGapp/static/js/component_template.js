@@ -46,7 +46,7 @@ $(function(){
                 success: function(data){
                     used = data.boolean;
                     message = data.message;
-                    $('.alert_red').text(message).show().fadeOut(3000)
+                    $('.alert_red').text(message).show().fadeOut(5000)
                 }
             });
 
@@ -91,7 +91,7 @@ $(function(){
 
                 $.ajax({
                     type: "POST",
-                    url: "/delete_component",
+                    url: "/delete_component_template",
                     dataType: "json",
                     data: {'component_name':component_name},
                     success: function(data){

@@ -102,7 +102,7 @@ $(function() {
                 success: function(data){
                     used = data.boolean;
                     message = data.message;
-                    $('.alert_red').text(message).show().fadeOut(3000)
+                    $('.alert_red').text(message).show().fadeOut(5000)
                 }
             });
 
@@ -124,7 +124,7 @@ $(function() {
                 success: function(data){
                     valid = data.boolean;
                     message = data.message;
-                    $('.alert_red').text(message).show().fadeOut(3000)
+                    $('.alert_red').text(message).show().fadeOut(5000)
                 }
             });
             return valid
@@ -144,7 +144,7 @@ $(function() {
                 success: function(data){
                     valid = data.boolean;
                     message = data.message;
-                    $('.alert_red').text(message).show().fadeOut(3000)
+                    $('.alert_red').text(message).show().fadeOut(5000)
                 }
             });
             return valid
@@ -220,7 +220,7 @@ $(function() {
                     dataType: "json",
                     data: {'var_name':var_name},
                     success: function(data){
-                        $('.alert_red').text(data.message).show().fadeOut(3000)
+                        $('.alert_red').text(data.message).show().fadeOut(5000)
                     }
 
                 });
