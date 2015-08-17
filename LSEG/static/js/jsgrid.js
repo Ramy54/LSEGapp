@@ -1010,6 +1010,7 @@
         },
 
         generateItem: function(item) {
+
             var $row = this._rowByItem(item);
             if($row.length) {
                 this._generateRow($row);
@@ -1043,7 +1044,8 @@
         },
 
         _generateRow: function($row){
-            alert("test2")
+            var item = $row.data(JSGRID_ROW_DATA_KEY);
+            location.href = 'save_file/' + item.id
 
         },
 
@@ -1935,7 +1937,7 @@
 
         editButton: true,
         deleteButton: true,
-        generateButton: true,
+        generateButton: false,
 
         clearFilterButton: true,
         modeSwitchButton: true,

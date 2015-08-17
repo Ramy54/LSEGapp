@@ -36,16 +36,17 @@ urlpatterns = patterns('LSEGapp.views',
                        url(r'^edit_value$', 'edit_value'),
 
 
-                       #DELETE URLS
-                       url(r'^delete_host/(?P<id_host>\d+)$','delete_host'),
 
 
                        #HOST URLS
                        url(r'^add_host/(?P<id_env>\d+)$', 'add_host'),
                        url(r'^save_file/(?P<id_host>\d+)$','save_file'),  # Generate the YAML
+                       url(r'^save_files$','save_files'),  # Save the files in tmp
+                       url(r'^save_zip$','save_zip'),  # Generate the zip from saved_files
                        url(r'^set_default$', 'set_default'),
                        url(r'^role_filter$', 'role_filter'),
                        url(r'^get_hosts$', 'get_hosts'),
+                       url(r'^delete_host$', 'delete_host'),
 
 
                        #ROLE TEMPLATE URLS (ALL THE VIEWS HERE ARE DEFINED IN role_views)

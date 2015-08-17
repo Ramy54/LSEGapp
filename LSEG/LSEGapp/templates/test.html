@@ -4,30 +4,48 @@
 
 
 {% block content %}
-
-
-    <form id="myForm" method="post" action="">
-        {{ form.as_p }}
-        <table border="0" cellpadding="0" cellspacing="0">
-            <tbody>
-            {% for form in sorteForm %}
+    <div class="row">
+        <div class="col-md-5">
+            <table class="table table-striped">
+                <thead>
                 <tr>
-                    <td>{{ form.field1 }}</td>
-                    <td>{{ form.field2 }}</td>
-                    <td>{{ form.field3 }}</td>
+                    <th class="col-md-3">Host <button type="button" class="btn btn-xs btn-success" onclick="location.href='{% url "LSEGapp.views.add_host" environment.id %}';">Add</button></th>
+                    <th class="col-md-4">Role</th>
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-        {{ sorteForm.management_form }}
-    </form>
+                </thead>
+                <tbody>
+                {% regroup host_roles by host as host_grouped %} <!-- the list of host_roles is regrouped by host -->
+                {% for group in host_grouped %}
+                    <tr>
+                        <td>
+                            <strong><a href="{% url "LSEGapp.views.host_details" group.grouper.id %}">{{ group.grouper }}</a></strong>
 
-<script type="text/javascript">
-    $(function() {
-        $('#myForm tbody tr').formset();
-    })
-</script>
+                            <button style="float: right"  title="Delete" class="btn btn-xs btn-danger" onclick="location.href='{% url "LSEGapp.views.delete_host" %}';">
+                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                            </button>
+
+                            <button style="float: right;" title="Generate YAML" class="btn btn-xs btn-success" onclick="location.href='{% url "LSEGapp.views.save_file" %}';">
+                                <span class="glyphicon glyphicon-save-file" aria-hidden="true"></span>
+                            </button>
+
+                        </td>
+                        {% for host_role in group.list %}
+                            <td>
+                                <a href="{% url "LSEGapp.views.role_details" group.grouper.id host_role.role.id %}"> {{ host_role.role.name }} </a>
+                            </td>
+                            </tr>
+                            <tr>
+                            <td></td>
+                        {% endfor %}
+                        <td></td>
+                        </tr>
+                {% endfor %}
 
 
+
+                </tbody>
+            </table>
+        </div>
+    </div>
 {% endblock %}
 

@@ -23,7 +23,7 @@ $(function(){
                 headerTemplate: function() {
                     return $("<button>").attr("type", "button").attr("class","generate-button")
                         .on("click", function () {
-                            alert("test")
+                            generateSelectedItems()
                         });
                 },
 
@@ -42,6 +42,7 @@ $(function(){
             { type: "control",
                 modeSwitchButton: false,
                 editButton: false,
+                generateButton: true,
 
                 headerTemplate: function() {
                     return $("<button>").attr("type", "button").attr("class","btn btn-s btn-success").text("Add")
@@ -52,19 +53,14 @@ $(function(){
             }
         ],
 
-        onItemDeleting: function(grid){ //Return if a variable is used by other roles
 
 
-        },
 
-
-        editItem: function(item){
-
-        },
 
 
         controller:{
             loadData: function(filter) {
+                var id_env = $('#id_environment').val();
                 var host_filter = filter.host;
                 var deferred = $.Deferred();
 
@@ -88,11 +84,62 @@ $(function(){
             },
 
             deleteItem: function(item) {
+                var host_id = item.id;
+
+                $.ajax({
+                    type: "POST",
+                    url: "/delete_host",
+                    dataType: "json",
+                    data: {'host_id':host_id},
+                    success: function(data){
+
+                    }
+
+                });
             }
 
 
         }
 
     });
+
+    var selectedItems = [];
+
+    var selectItem = function(item) {
+        selectedItems.push(item);
+    };
+
+    var unselectItem = function(item) {
+        selectedItems = $.grep(selectedItems, function(i) {
+            return i !== item;
+        });
+    };
+
+    var generateSelectedItems = function() {
+        if(!selectedItems.length)
+            return;
+
+        var $grid = $("#jsGrid");
+
+        var hosts_ids = [];
+
+        for(var o in selectedItems) {
+            hosts_ids.push(selectedItems[o].id);
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/save_files",
+            async:false,
+            dataType: "json",
+            data: {'myarray': JSON.stringify(hosts_ids)},
+            success: function(data){
+
+            }
+
+        });
+        location.href = "save_zip"; // Call this URL after having saved the selected files
+
+    }
 
 });

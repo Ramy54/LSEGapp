@@ -1,3 +1,4 @@
+from django.core.files.base import ContentFile
 from django.http import *
 from django.shortcuts import *
 from LSEGapp.forms import *
@@ -5,7 +6,12 @@ from LSEGapp.models import *
 from django.forms.formsets import *
 from django.db import IntegrityError
 from django.forms.utils import ErrorList
-
+from django.core.files import *
+import json
+import os
+import zipfile
+import io
+from datetime import  datetime
 
 # MAIN PAGES VIEWS
 
@@ -30,9 +36,12 @@ def index(request):
 
 def get_hosts(request):
     if request.is_ajax:
+        #TAKE DATA FROM AJAX CALL
         host_filter = request.POST['host_filter']
         id_env = request.POST['id_env']
-        hosts_roles = HostRole.objects.all().order_by('host__name')
+        environment = Environment.objects.get(id=id_env)
+        hosts_roles = HostRole.objects.filter(host__environment=environment).order_by('host__name')
+        #FILTERING
         if host_filter != "":
             hosts = Host.objects.all().filter(name__contains=host_filter)
             hosts_roles = hosts_roles.filter(host=hosts)
@@ -41,22 +50,24 @@ def get_hosts(request):
         hosts_roles_list = []
 
         if hosts_roles.exists():
-            host_role = hosts_roles[0]
             host_role_old = hosts_roles[0]
-            role_text = '<a>' + host_role_old.role.name + '</a>'
+            host_role = hosts_roles[0]
+            role_text = '<a href= " role_details/' + str(host_role_old.host.id) + '/' + str(host_role_old.role.id) + '">'  + host_role_old.role.name + '</a>'
 
             for host_role in hosts_roles[1:]:
                 if host_role.host.name == host_role_old.host.name:
-                    role_text = role_text + '<br><a>' + host_role.role.name + '</a>'
+                    role_text = role_text + '<br><a href= " role_details/' + str(host_role.host.id) + '/' + str(host_role.role.id) + '">' + host_role.role.name + '</a>'
                 else:
-                    record = {'id': host_role_old.host.id, 'host':host_role_old.host.name,'role_text': role_text}
+                    host_text = '<a href= " host_details/' + str(host_role_old.host.id) + '">'  + host_role_old.host.name + '</a>'
+                    record = {'id': host_role_old.host.id, 'host':host_text,'role_text': role_text}
                     hosts_roles_list.append(record)
-                    role_text= '<a>' + host_role.role.name + '</a>'
+                    role_text= '<a href= " role_details/' + str(host_role.host.id) + '/' + str(host_role.role.id) + '">' + host_role.role.name + '</a>'
                 host_role_old = host_role
 
             if host_role.host.name == host_role_old.host.name:
                 role_text = role_text
-                record = {'id': host_role_old.host.id, 'host':host_role_old.host.name,'role_text': role_text}
+                host_text = '<a href= " host_details/' + str(host_role_old.host.id) + '">'  + host_role_old.host.name + '</a>'
+                record = {'id': host_role_old.host.id, 'host':host_text,'role_text': role_text}
                 hosts_roles_list.append(record)
 
         dict['host_roles'] = hosts_roles_list
@@ -187,11 +198,15 @@ def edit_value(request):
 
 
 # DELETE METHODS/VIEWS
-def delete_host(request, id_host):
-    host = Host.objects.get(id=id_host)
-    HostRole.objects.filter(host=host).delete()
-    host.delete()
-    return redirect(index)
+def delete_host(request):
+    if request.is_ajax:
+        host_id = request.POST['host_id']
+        host = Host.objects.get(id=host_id)
+        HostRole.objects.filter(host=host).delete()
+        host.delete()
+        return HttpResponse('Success')
+    else:
+        return HttpResponse('You Failed')
 
 
 # DETAILS VIEWS
@@ -257,7 +272,95 @@ def autocomplete_role_name(request):
         return HttpResponse("Ramy you failed")
 
 
-def save_file(request, id_host):
+def save_files(request):
+    if request.is_ajax():
+        hosts_ids = json.loads(request.POST['myarray'])
+
+        hosts = Host.objects.filter(id__in=hosts_ids)
+
+        for host in hosts:
+
+            host_roles = HostRole.objects.all().filter(host=host)
+            roles_components = RoleComponents.objects.all().filter(host_role=host_roles)
+            components_variables = ComponentVariables.objects.all().filter(role_component=roles_components)
+
+            with open('tmp/' + host.name +'.yaml', 'w') as f:
+                myfile = File(f)
+                list = [components_variables[0]]
+
+                for component_variable in components_variables[1:]:  #We only save the variable that are not in the list already.
+                    i = 0
+                    found = False
+                    while i < len(list) and (not found):
+                        found = component_variable.variable.name == list[i].variable.name
+                        i= i+1
+
+                    if (not found):
+                        list = list + [component_variable]
+
+                for component_variable in list:
+                    variable = component_variable.variable.name
+                    myfile.write(variable + ": ")
+                    if component_variable.value == "":
+                        myfile.write("\'" + component_variable.variable.default_value + "\' \n")
+                    else:
+                        myfile.write("\'" + component_variable.value + "\' \n")
+
+        return HttpResponse('Success')
+
+def save_zip(request):
+    # Files (local path) to put in the .zip
+    # FIXME: Change this (get paths from DB etc)
+    filenames = os.listdir("tmp")
+    root = "tmp/"
+    files_list = []
+
+    for file in filenames:
+        files_list = files_list + [os.path.join(root,file)]
+
+    # Folder name in ZIP archive which contains the above files
+    # E.g [thearchive.zip]/somefiles/file2.txt
+    # FIXME: Set this to something better
+    date = datetime.now()
+    zip_subdir = "YAML_" + str(date.day) + '_' + str(date.month) + '_' + str(date.year) + '_' + str(date.hour) + '_' + str(date.minute)
+    zip_filename = "%s.zip" % zip_subdir
+
+    # Open StringIO to grab in-memory ZIP contents
+    s = io.BytesIO()
+
+    # The zip compressor
+    zf = zipfile.ZipFile(s, "w")
+
+    for fpath in files_list:
+        # Calculate path for file in zip
+        fdir, fname = os.path.split(fpath)
+        zip_path = os.path.join(zip_subdir, fname)
+
+        # Add file, at correct path
+        zf.write(fpath, zip_path)
+
+    # Must close zip for all contents to be written
+    zf.close()
+
+    for the_file in os.listdir(root):
+        file_path = os.path.join(root, the_file)
+        try:
+            if os.path.isfile(file_path):
+                os.unlink(file_path)
+            #elif os.path.isdir(file_path): shutil.rmtree(file_path)
+        except Exception:
+            print('Exceptions!!!')
+
+
+    # Grab ZIP file from in-memory, make response with correct MIME-type
+    resp = HttpResponse(s.getvalue())
+    # ..and correct content-disposition
+    resp['Content-Disposition'] = 'attachment; filename=%s' % zip_filename
+
+    return resp
+
+
+def save_file(request,id_host):
     host = Host.objects.get(id=id_host)
     host_roles = HostRole.objects.all().filter(host=host)
     roles_components = RoleComponents.objects.all().filter(host_role=host_roles)
@@ -268,12 +371,12 @@ def save_file(request, id_host):
 
     list = [components_variables[0]]
 
-    for component_variable in components_variables[1:]:
+    for component_variable in components_variables[1:]:  #We only save the variable that are not in the list already.
         i = 0
         found = False
         while i < len(list) and (not found):
-           found = component_variable.variable.name == list[i].variable.name
-           i= i+1
+            found = component_variable.variable.name == list[i].variable.name
+            i= i+1
 
         if (not found):
             list = list + [component_variable]
@@ -288,6 +391,9 @@ def save_file(request, id_host):
             response.write(component_variable.value + "\n")
 
     return response
+
+
+
 
 
 def role_filter(request):
