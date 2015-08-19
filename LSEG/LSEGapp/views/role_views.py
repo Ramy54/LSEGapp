@@ -12,9 +12,7 @@ from django.forms.utils import ErrorList
 
 # MAIN VIEW TO RENDER THE ROLE_TEMPLATE (/role_template URL)
 def role_template(request):
-    roles_components = RoleComponentsTemplate.objects.all()
     return render(request, 'template/role_template.html', locals())
-
 
 def get_roles(request):
     if request.is_ajax:
@@ -146,3 +144,21 @@ def is_role_used(request):
     else:
         return HttpResponse('You Failled')
 
+
+def role_filter(request):
+    if request.is_ajax:
+        business_app = request.POST['business_app']
+        if business_app != "--SELECT--":
+            ba = BusinessApplication.objects.get(name=business_app)
+            roles_ba = RoleBusinessApplication.objects.filter(business_application=ba).order_by('role')
+            roles = []
+            for role_ba in roles_ba:
+                roles = roles + [role_ba.role]
+        else:
+            roles = []
+        data = {}
+        for role in roles:
+            data[role.id] = role.name
+        return JsonResponse(data)
+    else:
+        return HttpResponse("Ramy you failed")

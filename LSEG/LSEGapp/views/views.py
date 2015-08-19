@@ -12,6 +12,7 @@ import os
 import zipfile
 import io
 from datetime import  datetime
+import yaml
 
 # MAIN PAGES VIEWS
 
@@ -308,9 +309,11 @@ def save_files(request):
 
         return HttpResponse('Success')
 
-def save_zip(request):
+def save_zip(request,id_env):
+    environment = Environment.objects.get(id=id_env)
+    date = datetime.now()
+
     # Files (local path) to put in the .zip
-    # FIXME: Change this (get paths from DB etc)
     filenames = os.listdir("tmp")
     root = "tmp/"
     files_list = []
@@ -319,10 +322,7 @@ def save_zip(request):
         files_list = files_list + [os.path.join(root,file)]
 
     # Folder name in ZIP archive which contains the above files
-    # E.g [thearchive.zip]/somefiles/file2.txt
-    # FIXME: Set this to something better
-    date = datetime.now()
-    zip_subdir = "YAML_" + str(date.day) + '_' + str(date.month) + '_' + str(date.year) + '_' + str(date.hour) + '_' + str(date.minute)
+    zip_subdir = "YAML_" + environment.name + "_" + str(date.day) + '_' + str(date.month) + '_' + str(date.year) + '_' + str(date.hour) + '-' + str(date.minute)
     zip_filename = "%s.zip" % zip_subdir
 
     # Open StringIO to grab in-memory ZIP contents
@@ -347,9 +347,8 @@ def save_zip(request):
         try:
             if os.path.isfile(file_path):
                 os.unlink(file_path)
-            #elif os.path.isdir(file_path): shutil.rmtree(file_path)
         except Exception:
-            print('Exceptions!!!')
+            print('Exceptions!')
 
 
     # Grab ZIP file from in-memory, make response with correct MIME-type
@@ -396,21 +395,8 @@ def save_file(request,id_host):
 
 
 
-def role_filter(request):
-    if request.is_ajax:
-        business_app = request.POST['business_app']
-        if business_app != "--SELECT--":
-            ba = BusinessApplication.objects.get(name=business_app)
-            roles_ba = RoleBusinessApplication.objects.filter(business_application=ba).order_by('role')
-            roles = []
-            for role_ba in roles_ba:
-                roles = roles + [role_ba.role]
-        else:
-            roles = []
-        data = {}
-        for role in roles:
-            data[role.id] = role.name
-        return JsonResponse(data)
-    else:
-        return HttpResponse("Ramy you failed")
+
+
+
+
 

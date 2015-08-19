@@ -7,10 +7,11 @@ from LSEGapp.models import *
 from django.forms.formsets import *
 from django.db import IntegrityError
 from django.forms.utils import ErrorList
+import os
+import yaml
 
 
-def variables(request, delete_message=0):
-    variables = Variable.objects.all()  # The variables to be given to the template
+def variables(request):
     return render(request, 'template/variables.html', locals())
 
 
@@ -156,3 +157,29 @@ def is_var_valid2(request):
     else:
         return HttpResponse('You Failled')
 
+
+def read_file(request):
+    # INITIALIZATION
+    filenames = os.listdir("tmp") ## all files in tmp
+    root = "tmp/"
+    files_list = []
+
+    for file in filenames:
+        files_list = files_list + [os.path.join(root,file)]
+
+    #TAKE FILE ONE BY ONE
+
+    for file in files_list:
+        with open(file, 'r') as stream:
+            content= yaml.load(stream)     #Content of the YAML as a dictonary {key : value}
+
+        for key, value in content.items():
+            var_name = key
+            var_value = value
+            try:
+                var = Variable(name=var_name, default_value=var_value, required = True)
+                var.save()
+            except IntegrityError:
+                continue
+
+    return redirect(variables)

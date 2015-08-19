@@ -11,9 +11,7 @@ from LSEGapp.views import views
 
 
 def component_template(request):
-    components_variables = ComponentVariablesTemplate.objects.all()
     return render(request, 'template/component_template.html', locals())
-
 
 
 def get_components(request):
@@ -29,16 +27,14 @@ def get_components(request):
 
         if components_variables.exists():
             component_variable = components_variables[0]
-            component_variable_old = components_variables[0]
-            variable_text = '<a>' + component_variable_old.variable.name + '</a>'
+            component_variable_old = component_variable
+            variable_text = '<a href="/variables">' + component_variable_old.variable.name + '</a>'
 
             for component_variable in components_variables[1:]:
-                if component_variable.component.name == component_variable_old.component.name:
-                    variable_text = variable_text + '<br><a>' + component_variable.variable.name + '</a>'
-                else:
+                variable_text = variable_text + '<br><a href="/variables">' + component_variable.variable.name + '</a>'
+                if component_variable.component.name != component_variable_old.component.name:
                     record = {'id': component_variable_old.component.id, 'component':component_variable_old.component.name,'variable_text': variable_text}
                     components_variables_list.append(record)
-                    variable_text= '<a>' + component_variable.variable.name + '</a>'
                 component_variable_old = component_variable
 
             if component_variable.component.name == component_variable_old.component.name:

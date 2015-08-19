@@ -103,6 +103,7 @@ $(function(){
 
     });
 
+
     var selectedItems = [];
 
     var selectItem = function(item) {
@@ -116,6 +117,7 @@ $(function(){
     };
 
     var generateSelectedItems = function() {
+
         if(!selectedItems.length)
             return;
 
@@ -138,7 +140,7 @@ $(function(){
             }
 
         });
-        location.href = "save_zip"; // Call this URL after having saved the selected files
+        location.href = "save_zip/" + id_env; // Call this URL after having saved the selected files
 
     }
 

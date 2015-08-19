@@ -26,25 +26,20 @@ urlpatterns = patterns('LSEGapp.views',
                        url(r'^index$','index'),
 
 
-                       #DETAILS URLS
+                       #HOST&ROLE DETAILS URLS
                        url(r'^host_details/(?P<id_host>\d+)$', 'host_details'),
                        url(r'^role_details/(?P<id_host>\d+)/(?P<id_role>\d+)$','role_details'),
-
-
-                       #EDIT URLS
                        url(r'^edit_host/(?P<id_host>\d+)$', 'edit_host'),
                        url(r'^edit_value$', 'edit_value'),
-
-
+                       url(r'^set_default$', 'set_default'),
 
 
                        #HOST URLS
                        url(r'^add_host/(?P<id_env>\d+)$', 'add_host'),
                        url(r'^save_file/(?P<id_host>\d+)$','save_file'),  # Generate the YAML
                        url(r'^save_files$','save_files'),  # Save the files in tmp
-                       url(r'^save_zip$','save_zip'),  # Generate the zip from saved_files
-                       url(r'^set_default$', 'set_default'),
-                       url(r'^role_filter$', 'role_filter'),
+                       url(r'^save_zip/(?P<id_env>\d+)$','save_zip'),  # Generate the zip from saved_files
+                       url(r'^read_file$','read_file'),
                        url(r'^get_hosts$', 'get_hosts'),
                        url(r'^delete_host$', 'delete_host'),
 
@@ -57,6 +52,7 @@ urlpatterns = patterns('LSEGapp.views',
                        url(r'^delete_role_template$', 'delete_role_template'),
                        url(r'^is_role_used$', 'is_role_used'),
                        url(r'^autocomplete_role_name$', 'autocomplete_role_name'),
+                       url(r'^role_filter$', 'role_filter'),
 
 
                        #COMPONENT TEMPLATE URLS (ALL THE VIEWS HERE ARE DEFINED IN component_views)
