@@ -6,6 +6,7 @@
 $(function(){
     var id_env = $( "#id_environment option:selected").val();
 
+
     $("#jsGrid").jsGrid({
 
         width: "100%",

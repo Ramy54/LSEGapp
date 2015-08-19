@@ -342,6 +342,7 @@ def save_zip(request,id_env):
     # Must close zip for all contents to be written
     zf.close()
 
+    #Delete the file stored in tmp
     for the_file in os.listdir(root):
         file_path = os.path.join(root, the_file)
         try:
@@ -390,10 +391,6 @@ def save_file(request,id_host):
             response.write(component_variable.value + "\n")
 
     return response
-
-
-
-
 
 
 

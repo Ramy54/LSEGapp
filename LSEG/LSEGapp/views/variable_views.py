@@ -177,7 +177,7 @@ def read_file(request):
             var_name = key
             var_value = value
             try:
-                var = Variable(name=var_name, default_value=var_value, required = True)
+                var = Variable(name=var_name, default_value=var_value, type="String", required = True)
                 var.save()
             except IntegrityError:
                 continue
