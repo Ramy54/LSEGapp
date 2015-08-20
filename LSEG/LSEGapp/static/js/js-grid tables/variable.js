@@ -153,6 +153,10 @@ $(function() {
 
     });
 
-
+    $('#id_file')
+        .on('change',function(){
+            $('#myForm').submit()
+        })
+        .filestyle({input: false, buttonText: "Generate variables"})
 
 });

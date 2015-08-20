@@ -53,3 +53,8 @@ class AddRoleForm(forms.Form):
 
 
 
+class UploadFileForm(forms.Form):
+    file = forms.FileField()
+
+
+

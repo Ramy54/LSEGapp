@@ -16,21 +16,28 @@
 
 
 {% block content %}
-    <div class="page-header">
-        <button class="btn btn btn-success" id="test" onclick="location.href = 'read_file'" style="float: right" title="Please put the yamls to upload in ../LSEG/tmp">Generate Variables</button>
-        <h2>Variable Table  </h2>
 
+    <div class="page-header">
+
+        <h2>Variable Table  </h2>
         <span style="display: inline-block; color: red;" class="alert_red"></span>
         <span style="display: inline-block; color: green;" class="alert_green"></span>
     </div>
 
+
+    <form id="myForm" method="post" enctype="multipart/form-data" >
+        {% csrf_token %}
+        <div style="float:right; margin-bottom: 20px">
+            {{ form.file }}
+        </div>
+
+    </form>
 
     <div id="jsGrid"></div>
 
     <div class="page-header" style="margin-top: 75px">
 
     </div>
-
 
 
 {% endblock %}

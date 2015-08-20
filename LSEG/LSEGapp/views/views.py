@@ -15,25 +15,18 @@ from datetime import  datetime
 import yaml
 
 # MAIN PAGES VIEWS
-
 def index(request):
     environment = Environment.objects.first()
     if request.method == 'POST':  # If the form has been submitted...
         form = EnvironmentForm(request.POST)  # A form bound to the POST data
-        if form.is_valid():  # All validation rules pass
-            # Process the data in form.cleaned_data
-            # ...
+        if form.is_valid():
             environment = form.cleaned_data['environment']
-
     else:
         form = EnvironmentForm()
 
-    hosts = Host.objects.filter(environment=environment)
-    host_roles = []
-    for host in hosts:
-        host_roles = host_roles + list(HostRole.objects.filter(host=host))
-
     return render(request, 'index.html', locals())
+
+
 
 def get_hosts(request):
     if request.is_ajax:

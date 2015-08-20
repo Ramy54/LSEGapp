@@ -9,10 +9,28 @@ from django.db import IntegrityError
 from django.forms.utils import ErrorList
 import os
 import yaml
+from LSEGapp.views.views import *
 
 
 def variables(request):
+    if request.method == 'POST':
+
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            handle_uploaded_file(request.FILES['file'])
+    else:
+        form = UploadFileForm()
+
     return render(request, 'template/variables/variables.html', locals())
+
+
+def handle_uploaded_file(f):
+    with open('tmp/' + f.name, 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+
+    read_file()
+
 
 
 def get_vars(request):
@@ -158,7 +176,7 @@ def is_var_valid2(request):
         return HttpResponse('You Failled')
 
 
-def read_file(request):
+def read_file():
     # INITIALIZATION
     filenames = os.listdir("tmp") ## all files in tmp
     root = "tmp/"
@@ -167,7 +185,7 @@ def read_file(request):
     for file in filenames:
         files_list = files_list + [os.path.join(root,file)]
 
-    #TAKE FILE ONE BY ONE
+    #TAKE FILE ONE BY ONE AND SAVE VARIABLE TO DATABASE
 
     for file in files_list:
         with open(file, 'r') as stream:
@@ -182,4 +200,11 @@ def read_file(request):
             except IntegrityError:
                 continue
 
-    return redirect(variables)
+  #Delete the file stored in tmp
+    for the_file in os.listdir(root):
+        file_path = os.path.join(root, the_file)
+        try:
+            if os.path.isfile(file_path):
+                os.unlink(file_path)
+        except Exception:
+            print('Exceptions!')

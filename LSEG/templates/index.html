@@ -9,11 +9,13 @@
 {% block content %}
 
     <div style="margin-top: 20px">
-        <form action="{% url 'LSEGapp.views.index' %}" method="post">
+        <form action="" method="post">
             {% csrf_token %}
-            <h4>{{ form.environment.label }} :  {{ form.environment }}</h4>
+            <div>{{ form.environment.label }} :  {{ form.environment }}</div>
 
         </form>
+
+
     </div>
 
     <div class="page-header">
