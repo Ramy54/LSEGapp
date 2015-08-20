@@ -43,10 +43,10 @@ class VariableForm(forms.ModelForm):
 #FORM USED IN FORMSETS
 
 class AddComponentForm(forms.Form):
-    component = forms.ModelChoiceField(queryset=Component.objects.all(), label="Component")
+    component = forms.ModelChoiceField(queryset=Component.objects.all(), label="Component", empty_label=None)
 
 class AddVariableForm(forms.Form):
-    variable = forms.ModelChoiceField(queryset=Variable.objects.all(), label="Variable",required=True)
+    variable = forms.ModelChoiceField(queryset=Variable.objects.all(), label="Variable",required=True, empty_label=None)
 
 class AddRoleForm(forms.Form):
     role = forms.ModelChoiceField(queryset=Role.objects.all(), label="Role", empty_label=None)

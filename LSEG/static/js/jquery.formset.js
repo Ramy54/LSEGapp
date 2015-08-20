@@ -58,6 +58,9 @@
                     row.append('<a class="' + options.deleteCssClass + '" href="javascript:void(0)">' + options.deleteText +'</a>');
                 }
                 row.find('a.' + options.deleteCssClass).click(function() {
+                    forms = $('.' + options.formCssClass).not(':hidden');
+                    if (options.pre_deletion) options.pre_deletion(forms);
+
                     var row = $(this).parents('.' + options.formCssClass),
                         del = row.find('input:hidden[id $= "-DELETE"]'),
                         buttonRow = row.siblings("a." + options.addCssClass + ', .' + options.formCssClass + '-add'),
@@ -184,7 +187,7 @@
                 // Check if we've exceeded the maximum allowed number of forms:
                 if (!showAddButton()) buttonRow.hide();
                 // If a post-add callback was supplied, call it with the added form:
-                if (options.added) options.added(row);
+                if (options.added) options.added(formCount);
                 return false;
             });
         }
@@ -203,7 +206,8 @@
         formCssClass: 'dynamic-form',    // CSS class applied to each form in a formset
         extraClasses: [],                // Additional CSS classes, which will be applied to each form in turn
         keepFieldValues: '',             // jQuery selector for fields whose values should be kept when the form is cloned
-        added: null,                     // Function called each time a new form is added
-        removed: null                    // Function called each time a form is deleted
+        added: null ,                     // Function called each time a new form is added
+        removed: null,                   // Function called each time a form is deleted
+        pre_deletion : null               // Function called just before an item is deleted
     };
 })(jQuery)
