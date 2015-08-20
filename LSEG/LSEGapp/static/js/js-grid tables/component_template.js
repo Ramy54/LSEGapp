@@ -4,14 +4,6 @@
 
 $(function(){
 
-    $('.formset').formset({
-        extraClasses: ['row1']
-    });
-
-    $('#id_form-0-variable')
-
-
-
     $("#jsGrid").jsGrid({
 
         width: "100%",

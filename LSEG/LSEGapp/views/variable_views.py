@@ -12,7 +12,7 @@ import yaml
 
 
 def variables(request):
-    return render(request, 'template/variables.html', locals())
+    return render(request, 'template/variables/variables.html', locals())
 
 
 def get_vars(request):

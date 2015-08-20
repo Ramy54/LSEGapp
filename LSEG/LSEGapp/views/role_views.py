@@ -12,7 +12,7 @@ from django.forms.utils import ErrorList
 
 # MAIN VIEW TO RENDER THE ROLE_TEMPLATE (/role_template URL)
 def role_template(request):
-    return render(request, 'template/role_template.html', locals())
+    return render(request, 'template/roles/role_template.html', locals())
 
 def get_roles(request):
     if request.is_ajax:
@@ -80,7 +80,7 @@ def add_role_template(request):
     else:
         form2 = RoleForm()
         formset = ComponentFormset()
-    return render(request, 'template/add_role_template.html', locals())
+    return render(request, 'template/roles/add_role_template.html', locals())
 
 
 # EDIT A ROLE VIEW (HAS ITS OWN URL)
@@ -114,7 +114,7 @@ def edit_role_template(request, id_role):
         formset = ComponentFormset(initial=list_of_components)
         form2 = RoleForm(initial={'name': role.name, 'business_application': role_ba.business_application})
 
-    return render(request, 'template/edit_role_template.html', locals())
+    return render(request, 'template/roles/edit_role_template.html', locals())
 
 
 def delete_role_template(request):

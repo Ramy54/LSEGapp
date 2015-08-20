@@ -115,7 +115,7 @@ def add_host(request, id_env):
         form2.fields['business_application'].queryset = BusinessApplication.objects.all().filter(id__in= ba_ids)
         formset = RoleFormset()
 
-    return render(request, 'add/add_host.html', locals())
+    return render(request, 'normal_user/add_host.html', locals())
 
 # EDIT VIEWS
 def edit_host(request, id_host):
@@ -162,7 +162,7 @@ def edit_host(request, id_host):
         form3.fields['business_application'].queryset = BusinessApplication.objects.all().filter(id__in= ba_ids)
         formset = RoleFormset(initial=list_of_roles)
 
-    return render(request, 'edit/edit_host.html', locals())
+    return render(request, 'normal_user/edit_host.html', locals())
 
 
 
@@ -234,7 +234,7 @@ def host_details(request, id_host):
         object = [ComponentVariableList(role_component=role_component, variable_list=variable_list)]
         object_list = object_list + object
 
-    return render(request, 'details/host_details.html', locals())
+    return render(request, 'normal_user/host_details.html', locals())
 
 
 def role_details(request, id_host, id_role):
@@ -244,7 +244,7 @@ def role_details(request, id_host, id_role):
     role_components = RoleComponents.objects.filter(host_role=host_role)
     components_variables = ComponentVariables.objects.filter(role_component=role_components)
 
-    return render(request, 'details/role_details.html', locals())
+    return render(request, 'normal_user/role_details.html', locals())
 
 
 # CUSTOM VIEWS

@@ -11,7 +11,7 @@ from LSEGapp.views import views
 
 
 def component_template(request):
-    return render(request, 'template/component_template.html', locals())
+    return render(request, 'template/components/component_template.html', locals())
 
 
 def get_components(request):
@@ -74,7 +74,7 @@ def add_component_template(request):
         formset = VariableFormset()
         form2 = ComponentForm()
 
-    return render(request, 'template/add_component_template.html', locals())
+    return render(request, 'template/components/add_component_template.html', locals())
 
 
 def edit_component_template(request, id_component):
@@ -107,7 +107,7 @@ def edit_component_template(request, id_component):
         formset = VariableFormset(initial=list_of_variables)
         form2 = ComponentForm(initial={'name': component.name})
 
-    return render(request, 'template/edit_component_template.html', locals())
+    return render(request, 'template/components/edit_component_template.html', locals())
 
 
 def delete_component_template(request):
