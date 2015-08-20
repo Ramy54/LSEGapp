@@ -15,10 +15,6 @@ h2{
     color: aquamarine
 }
 
-#FTSE {
-    color: red
-}
-
 #head-css {
     color: red;
     text-align: center;
@@ -36,4 +32,28 @@ h2{
 #btn {
     margin-left: 50px;
 
+}
+
+
+.my-button{
+    margin-left: 5px;
+    width: 16px;
+    height: 16px;
+    border: none;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-color: transparent;;
+}
+
+.my-button:hover{
+    opacity: .5;
+    transition: opacity 200ms linear;
+}
+
+.my-button.generate{
+    background: url("save.png");
+}
+
+.my-button.default{
+    background: url("");
 }

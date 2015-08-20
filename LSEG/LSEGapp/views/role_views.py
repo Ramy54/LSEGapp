@@ -29,15 +29,15 @@ def get_roles(request):
         if roles_components.exists():
             role_component = roles_components[0]
             role_component_old = roles_components[0]
-            component_text = '<a>' + role_component_old.component.name + '</a>'
+            component_text = '<a href="/component_template">' + role_component_old.component.name + '</a>'
 
             for role_component in roles_components[1:]:
                 if role_component.role.name == role_component_old.role.name:
-                    component_text = component_text + '<br><a>' + role_component.component.name + '</a>'
+                    component_text = component_text + '<br><a href="/component_template">' + role_component.component.name + '</a>'
                 else:
                     record = {'id': role_component_old.role.id, 'role':role_component_old.role.name,'component_text': component_text}
                     roles_components_list.append(record)
-                    component_text= '<a>' + role_component.component.name + '</a>'
+                    component_text= '<a href="/component_template">' + role_component.component.name + '</a>'
                 role_component_old = role_component
 
             if role_component.role.name == role_component_old.role.name:

@@ -22,7 +22,7 @@ $(function(){
         fields: [
             {
                 headerTemplate: function() {
-                    return $("<button>").attr("type", "button").attr("class","generate-button")
+                    return $("<button>").attr("type", "button").attr("class","my-button generate")
                         .on("click", function () {
                             generateSelectedItems()
                         });

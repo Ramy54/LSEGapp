@@ -1917,7 +1917,7 @@
         insertModeButtonClass: "jsgrid-insert-mode-button",
         editButtonClass: "jsgrid-edit-button",
         deleteButtonClass: "jsgrid-delete-button",
-        generateButtonClass: "generate-button",
+        generateButtonClass: "my-button",
         searchButtonClass: "jsgrid-search-button",
         clearFilterButtonClass: "jsgrid-clear-filter-button",
         insertButtonClass: "jsgrid-insert-button",
@@ -2108,9 +2108,9 @@
         _createGridButton: function(cls, tooltip, clickHandler) {
             var grid = this._grid;
 
-            if (cls=="generate-button"){
+            if (cls=="my-button"){
                 return $("<input>")
-                    .addClass(cls)
+                    .addClass(cls).addClass("generate")
                     .attr({
                         type: "button",
                         title: tooltip,
