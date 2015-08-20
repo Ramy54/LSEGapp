@@ -2,3 +2,4 @@ ramy_test.txt
 .*idea
 *.pyc
 tmp/
+db.sqlite3
