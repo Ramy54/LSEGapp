@@ -30,17 +30,20 @@ def get_components(request):
             component_variable_old = component_variable
             variable_text = '<a href="/variables">' + component_variable_old.variable.name + '</a>'
 
+            # LOOP through the component variables
             for component_variable in components_variables[1:]:
-                variable_text = variable_text + '<br><a href="/variables">' + component_variable.variable.name + '</a>'
-                if component_variable.component.name != component_variable_old.component.name:
+                if component_variable.component == component_variable_old.component:
+                    variable_text = variable_text + '<br><a href="/variables">' + component_variable.variable.name + '</a>'
+
+                else:
                     record = {'id': component_variable_old.component.id, 'component':component_variable_old.component.name,'variable_text': variable_text}
                     components_variables_list.append(record)
+                    variable_text = '<a href="/variables">' + component_variable.variable.name + '</a>'
                 component_variable_old = component_variable
 
-            if component_variable.component.name == component_variable_old.component.name:
-                variable_text = variable_text
-                record = {'id': component_variable_old.component.id, 'component': component_variable_old.component.name,'variable_text': variable_text}
-                components_variables_list.append(record)
+            #END OF LOOP, we need to add the last element
+            record = {'id': component_variable_old.component.id, 'component': component_variable_old.component.name,'variable_text': variable_text}
+            components_variables_list.append(record)
 
         dict['components_vars'] = components_variables_list
         return JsonResponse(dict)

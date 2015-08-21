@@ -21,13 +21,13 @@ from LSEGapp.forms import *
 urlpatterns = patterns('LSEGapp.views',
 
                        # MAIN URLS
-                       url(r'^admin/', include(admin.site.urls)),
-                       url(r'^$','index'),
-                       url(r'^index$','index'),
+                       url(r'^admin/', include(admin.site.urls)),   # Access to administration (user: ftsedev  mdp: ftsedev)
+                       url(r'^$','index'), #Index Page
+                       url(r'^index$','index'), #Index page accessible from /index
 
 
                        #HOST&ROLE DETAILS URLS
-                       url(r'^host_details/(?P<id_host>\d+)$', 'host_details'),
+                       url(r'^host_details/(?P<id_host>\d+)$', 'host_details'),  #Full view of a host
                        url(r'^role_details/(?P<id_host>\d+)/(?P<id_role>\d+)$','role_details'),
                        url(r'^edit_host/(?P<id_host>\d+)$', 'edit_host'),
                        url(r'^edit_value$', 'edit_value'),

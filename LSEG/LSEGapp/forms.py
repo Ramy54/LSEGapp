@@ -2,7 +2,6 @@ from LSEGapp.models import *
 from django import *
 from django.forms import *
 from django import forms
-from django.forms.util import ErrorList
 
 
 #TO ADD AN ENVIRONMENT
