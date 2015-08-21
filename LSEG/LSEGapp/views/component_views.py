@@ -4,16 +4,15 @@ from django.http import *
 from django.shortcuts import *
 from LSEGapp.forms import *
 from LSEGapp.models import *
-from django.forms.formsets import *
 from django.db import IntegrityError
 from django.forms.utils import ErrorList
-from LSEGapp.views import views
 
-
+#Main Component Template View
 def component_template(request):
     return render(request, 'template/components/component_template.html', locals())
 
 
+#Method called to render the component table
 def get_components(request):
     if request.is_ajax:
         component_filter = request.POST['component_filter']
@@ -51,6 +50,7 @@ def get_components(request):
         return HttpResponse("You failled")
 
 
+# ADD A COMPONENT VIEW (HAS ITS OWN URL)
 def add_component_template(request):
     VariableFormset = formsets.formset_factory(AddVariableForm, can_delete=True)
 
@@ -80,6 +80,7 @@ def add_component_template(request):
     return render(request, 'template/components/add_component_template.html', locals())
 
 
+# EDIT A COMPONENT VIEW (HAS ITS OWN URL)
 def edit_component_template(request, id_component):
     VariableFormset = formsets.formset_factory(AddVariableForm, extra=0)
     component = Component.objects.get(id=id_component)
@@ -113,6 +114,7 @@ def edit_component_template(request, id_component):
     return render(request, 'template/components/edit_component_template.html', locals())
 
 
+#View called when user click on the delete button
 def delete_component_template(request):
     if request.is_ajax:
         component_name = request.POST['component_name']
@@ -124,6 +126,7 @@ def delete_component_template(request):
         return HttpResponse('You Failed')
 
 
+#Check if a role is used
 def is_component_used(request):
     if request.is_ajax:
         component_name = request.POST['component_name']

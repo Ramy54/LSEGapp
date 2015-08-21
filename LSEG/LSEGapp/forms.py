@@ -1,6 +1,4 @@
 from LSEGapp.models import *
-from django import *
-from django.forms import *
 from django import forms
 
 

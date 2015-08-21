@@ -11,10 +11,10 @@ import json
 import os
 import zipfile
 import io
-from datetime import  datetime
-import yaml
+from datetime import datetime
 
-# MAIN PAGES VIEWS
+
+# MAIN PAGE VIEW
 def index(request):
     environment = Environment.objects.first()
     if request.method == 'POST':  # If the form has been submitted...
@@ -27,7 +27,7 @@ def index(request):
     return render(request, 'index.html', locals())
 
 
-
+##Method called to render the index table
 def get_hosts(request):
     if request.is_ajax:
         #TAKE DATA FROM AJAX CALL
@@ -69,10 +69,10 @@ def get_hosts(request):
     else:
         return HttpResponse("You failled")
 
-# ADD VIEWS
+
+# Add a host view
 def add_host(request, id_env):
     environment = Environment.objects.get(id=id_env)
-
     RoleFormset = formset_factory(AddRoleForm)
 
     if request.method == 'POST':
@@ -110,7 +110,8 @@ def add_host(request, id_env):
 
     return render(request, 'normal_user/add_host.html', locals())
 
-# EDIT VIEWS
+
+# Edit a host view
 def edit_host(request, id_host):
     host = Host.objects.get(id=id_host)
     environment = host.environment
@@ -158,7 +159,7 @@ def edit_host(request, id_host):
     return render(request, 'normal_user/edit_host.html', locals())
 
 
-
+#This method is called when adding or editing a host. It allows to save the role_components and component_variables in the database
 def save_roles(host, roles_id):
     for role_id in roles_id:
         host_role = HostRole(host=host, role=Role.objects.get(id=role_id))
@@ -178,7 +179,7 @@ def save_roles(host, roles_id):
                 component_variable.save()
 
 
-
+#View called when a variable for a machine is edited.
 def edit_value(request):
     if request.is_ajax:
         new_value = request.POST['new_value']
@@ -205,7 +206,7 @@ def delete_host(request):
 
 # DETAILS VIEWS
 
-
+#Detailed view of a host (quiet complex page)
 def host_details(request, id_host):
     host = Host.objects.get(id=id_host)
     host_roles = HostRole.objects.filter(host=host)
@@ -230,6 +231,7 @@ def host_details(request, id_host):
     return render(request, 'normal_user/host_details.html', locals())
 
 
+#Detailed view of a role
 def role_details(request, id_host, id_role):
     host = Host.objects.get(id=id_host)
     role = Role.objects.get(id=id_role)
@@ -242,6 +244,8 @@ def role_details(request, id_host, id_role):
 
 # CUSTOM VIEWS
 
+
+#View called when the user click on the default button (if user wants to get default value back)
 def set_default(request):
     if request.is_ajax:
         component_var_id = request.POST['component_var_id']
@@ -255,17 +259,28 @@ def set_default(request):
         return HttpResponse("Ramy you failed")
 
 
-def autocomplete_role_name(request):
+#Filter roles when a business_application is selected
+def role_filter(request):
     if request.is_ajax:
         business_app = request.POST['business_app']
-        ba = BusinessApplication.objects.get(name=business_app)
-        prefix = ba.prefix
-        data = {'prefix': prefix}
+        if business_app != "--SELECT--":
+            ba = BusinessApplication.objects.get(name=business_app)
+            roles_ba = RoleBusinessApplication.objects.filter(business_application=ba).order_by('role')
+            roles = []
+            for role_ba in roles_ba:
+                roles = roles + [role_ba.role]
+        else:
+            roles = []
+        data = {}
+        for role in roles:
+            data[role.id] = role.name
         return JsonResponse(data)
     else:
         return HttpResponse("Ramy you failed")
 
 
+
+# Save the selected files in ../LSEG/tmp before zipping them.
 def save_files(request):
     if request.is_ajax():
         hosts_ids = json.loads(request.POST['myarray'])
@@ -302,6 +317,8 @@ def save_files(request):
 
         return HttpResponse('Success')
 
+
+# Generate the zip file from the selected machines
 def save_zip(request,id_env):
     environment = Environment.objects.get(id=id_env)
     date = datetime.now()

@@ -1,17 +1,9 @@
 __author__ = 'ramyah'
 
-from django.http import *
-from django.shortcuts import *
-from LSEGapp.forms import *
-from LSEGapp.models import *
-from django.forms.formsets import *
-from django.db import IntegrityError
-from django.forms.utils import ErrorList
-import os
 import yaml
 from LSEGapp.views.views import *
 
-
+#Main variable view
 def variables(request):
     if request.method == 'POST':
 
@@ -24,15 +16,7 @@ def variables(request):
     return render(request, 'template/variables/variables.html', locals())
 
 
-def handle_uploaded_file(f):
-    with open('tmp/' + f.name, 'wb+') as destination:
-        for chunk in f.chunks():
-            destination.write(chunk)
-
-    read_file()
-
-
-
+#Method called to render the variable table
 def get_vars(request):
     if request.is_ajax:
         name_filter = request.POST['name_filter']
@@ -55,6 +39,7 @@ def get_vars(request):
         return HttpResponse("You failled")
 
 
+#Add a variable
 def add_variable(request):
     if request.is_ajax:
         name = request.POST['name']
@@ -73,6 +58,7 @@ def add_variable(request):
         return HttpResponse("Fail")
 
 
+#Delete a variable when delete button is pressed
 def delete_variable(request):
     if request.is_ajax:
         var_name = request.POST['var_name']
@@ -92,6 +78,7 @@ def delete_variable(request):
         return HttpResponse('You Failled')
 
 
+#Update a variable when edited
 def update_variable(request):
     if request.is_ajax:
         id = request.POST['id']
@@ -119,6 +106,7 @@ def update_variable(request):
         return HttpResponse('Faillure')
 
 
+#Check is a variable is used by a component
 def is_var_used(request):
     if request.is_ajax:
         name = request.POST['name']
@@ -136,6 +124,7 @@ def is_var_used(request):
         return HttpResponse('You Failled')
 
 
+#Check if a variable is valid
 def is_var_valid(request):
     if request.is_ajax:
         id = request.POST['id']
@@ -157,6 +146,7 @@ def is_var_valid(request):
         return HttpResponse('You Failled')
 
 
+#Check if a variable is valid (without using an id for the variable)
 def is_var_valid2(request):
     if request.is_ajax:
         new_name = request.POST['new_name']
@@ -176,6 +166,14 @@ def is_var_valid2(request):
         return HttpResponse('You Failled')
 
 
+#Method to handle the uploaded file from the view
+def handle_uploaded_file(f):
+    with open('tmp/' + f.name, 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+    read_file()
+
+#Generate variables from a YAML
 def read_file():
     # INITIALIZATION
     filenames = os.listdir("tmp") ## all files in tmp

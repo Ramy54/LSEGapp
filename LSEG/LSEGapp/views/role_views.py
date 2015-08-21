@@ -14,6 +14,8 @@ from django.forms.utils import ErrorList
 def role_template(request):
     return render(request, 'template/roles/role_template.html', locals())
 
+
+##Method called to render the role table
 def get_roles(request):
     if request.is_ajax:
 
@@ -117,6 +119,7 @@ def edit_role_template(request, id_role):
     return render(request, 'template/roles/edit_role_template.html', locals())
 
 
+#View called when user click on the delete button
 def delete_role_template(request):
     if request.is_ajax:
         role_name = request.POST['role_name']
@@ -128,6 +131,7 @@ def delete_role_template(request):
         return HttpResponse('You Failed')
 
 
+#Check if a role is used
 def is_role_used(request):
     if request.is_ajax:
         role_name = request.POST['role_name']
@@ -145,20 +149,14 @@ def is_role_used(request):
         return HttpResponse('You Failled')
 
 
-def role_filter(request):
+
+#When additing or editing a role, automaticly complete the name of the role with a prefix from the selected business_application
+def autocomplete_role_name(request):
     if request.is_ajax:
         business_app = request.POST['business_app']
-        if business_app != "--SELECT--":
-            ba = BusinessApplication.objects.get(name=business_app)
-            roles_ba = RoleBusinessApplication.objects.filter(business_application=ba).order_by('role')
-            roles = []
-            for role_ba in roles_ba:
-                roles = roles + [role_ba.role]
-        else:
-            roles = []
-        data = {}
-        for role in roles:
-            data[role.id] = role.name
+        ba = BusinessApplication.objects.get(name=business_app)
+        prefix = ba.prefix
+        data = {'prefix': prefix}
         return JsonResponse(data)
     else:
         return HttpResponse("Ramy you failed")
